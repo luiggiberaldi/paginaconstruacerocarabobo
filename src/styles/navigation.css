@@ -38,6 +38,7 @@ header.scrolled .nav-wrapper {
   font-family: var(--font-headings);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 .logo span {
@@ -177,9 +178,15 @@ header.scrolled .nav-wrapper {
   padding-left: 8px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .nav-links {
     display: none !important;
+  }
+  .header-actions {
+    display: none !important;
+  }
+  .menu-toggle {
+    display: block !important;
   }
 }
 

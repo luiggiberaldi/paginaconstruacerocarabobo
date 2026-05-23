@@ -4,9 +4,11 @@ import { useTasaBcv } from '../hooks/useTasaBcv';
 import { 
   DbProduct, 
   fallbackProducts, 
-  getProductSpecs, 
   getCategoryLabel 
 } from './AutocotizadorHelpers';
+import { ProductVisualCard } from './ProductVisualCard';
+import { SpecsModal } from './SpecsModal';
+import { CartDrawer } from './CartDrawer';
 
 // Optimized text normalization for Venezuelan market (removes accents, standardizes inch symbols)
 function normalizeText(text: string): string {
@@ -28,34 +30,23 @@ function preprocessQuery(query: string): string {
   
   // Replace compound expressions first (written out)
   const replacements = [
-    // 1 1/2
     { regex: /\b(?:una?|1)\s+y\s+(?:media|medio)\b/g, replacement: '1 1/2' },
     { regex: /\b(?:pulgada|pulgadas)\s+y\s+(?:media|medio)\b/g, replacement: '1 1/2' },
     { regex: /\b1[-.]1\/2\b/g, replacement: '1 1/2' },
-    
-    // 2 1/2
     { regex: /\b(?:dos|2)\s+y\s+(?:media|medio)\b/g, replacement: '2 1/2' },
     { regex: /\b2[-.]1\/2\b/g, replacement: '2 1/2' },
-    
-    // 3 1/2
     { regex: /\b(?:tres|3)\s+y\s+(?:media|medio)\b/g, replacement: '3 1/2' },
     { regex: /\b3[-.]1\/2\b/g, replacement: '3 1/2' },
-    
-    // Simple fractions (written out)
     { regex: /\b(?:tres\s+octavos?)\b/g, replacement: '3/8' },
     { regex: /\b(?:tres\s+cuartos?)\b/g, replacement: '3/4' },
     { regex: /\b(?:cinco\s+octavos?)\b/g, replacement: '5/8' },
     { regex: /\b(?:siete\s+octavos?)\b/g, replacement: '7/8' },
     { regex: /\b(?:un\s+cuarto|una\s+cuarta)\b/g, replacement: '1/4' },
     { regex: /\b(?:un\s+octavo)\b/g, replacement: '1/8' },
-    
-    // 16ths (written out)
     { regex: /\b(?:tres\s+dieciseis(?:avos)?)\b/g, replacement: '3/16' },
     { regex: /\b(?:cinco\s+dieciseis(?:avos)?)\b/g, replacement: '5/16' },
     { regex: /\b(?:siete\s+dieciseis(?:avos)?)\b/g, replacement: '7/16' },
     { regex: /\b(?:nueve\s+dieciseis(?:avos)?)\b/g, replacement: '9/16' },
-    
-    // Media / Medio / Un medio
     { regex: /\b(?:media|medio|un\s+medio)\b/g, replacement: '1/2' }
   ];
 
@@ -65,7 +56,6 @@ function preprocessQuery(query: string): string {
   
   return term;
 }
-
 
 // Synonyms map tailored to the Venezuelan construction & steel market
 const VENEZUELAN_SYNONYMS: { [key: string]: string[] } = {
@@ -95,6 +85,19 @@ export function Autocotizador() {
   
   // Connection and Offline States
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  // Mobile Viewport State
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Cart Drawer State (Mobile/Tablet)
+  const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 992);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   // Modal Specifications State
   const [selectedSpecProduct, setSelectedSpecProduct] = useState<DbProduct | null>(null);
@@ -221,8 +224,9 @@ export function Autocotizador() {
 
   // Sliced categories for the expand/collapse sidebar feature
   const visibleCategories = useMemo(() => {
+    if (isMobile) return filteredCategories;
     return showAllCategories ? filteredCategories : filteredCategories.slice(0, 8);
-  }, [filteredCategories, showAllCategories]);
+  }, [filteredCategories, showAllCategories, isMobile]);
 
   // Handle checking/unchecking/adding a product card
   const handleToggleProduct = (product: DbProduct) => {
@@ -332,9 +336,7 @@ export function Autocotizador() {
         pages.push(i);
       }
     } else {
-      // Always include page 1
       pages.push(1);
-
       let start = Math.max(2, currentPage - 1);
       let end = Math.min(totalPages - 1, currentPage + 1);
 
@@ -356,15 +358,12 @@ export function Autocotizador() {
         pages.push('...');
       }
 
-      // Always include last page
       pages.push(totalPages);
     }
     return pages;
   }, [totalPages, currentPage]);
 
   // Pricing Conversion Factors
-  // precio_db está en USDT → convertir a USD BCV: precio_db × (tasaUsdt / tasaBcv)
-  // equivalente en Bs: precio_db × tasaUsdt
   const factor = tasaBcv.tasaUsdt > 0 && tasaBcv.precio > 0
     ? tasaBcv.tasaUsdt / tasaBcv.precio
     : 1;
@@ -430,9 +429,24 @@ export function Autocotizador() {
     window.open(url, '_blank');
   };
 
-  const currentSpecSheet = useMemo(() => {
-    return selectedSpecProduct ? getProductSpecs(selectedSpecProduct) : null;
-  }, [selectedSpecProduct]);
+  const sharedCartProps = {
+    selectedItems,
+    products,
+    factor,
+    tasaBcv,
+    isOnline,
+    clientName,
+    setClientName,
+    clientCedula,
+    setClientCedula,
+    clientAddress,
+    setClientAddress,
+    totalUsd,
+    totalVes,
+    onRemoveFromCart: handleRemoveFromCart,
+    onClearCart: handleClearCart,
+    onSendQuote: handleSendQuote,
+  };
 
   return (
     <>
@@ -558,7 +572,7 @@ export function Autocotizador() {
               </nav>
             </div>
 
-            {filteredCategories.length > 8 && (
+            {!isMobile && filteredCategories.length > 8 && (
               <button 
                 type="button" 
                 className="category-expand-btn"
@@ -583,12 +597,12 @@ export function Autocotizador() {
             )}
 
             {/* Live Ticker Box */}
-            <div className="sidebar-title" style={{ marginTop: '10px' }}>
+            <div className="sidebar-title sidebar-tasa-title" style={{ marginTop: '10px' }}>
               <span className="bcv-rate-dot-pulse" style={{ width: '6px', height: '6px', marginRight: '4px' }}></span>
               Tasa Referencial
             </div>
 
-            <div className={`bcv-rate-banner ${!tasaBcv.cargando ? 'bcv-rate-banner-active' : ''}`} style={{ flexDirection: 'column', alignItems: 'stretch', gap: '8px', padding: '12px' }}>
+            <div className={`bcv-rate-banner sidebar-tasa-banner ${!tasaBcv.cargando ? 'bcv-rate-banner-active' : ''}`} style={{ flexDirection: 'column', alignItems: 'stretch', gap: '8px', padding: '12px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
                 <span style={{ color: 'var(--text-muted)' }}>Tasa BCV:</span>
                 <strong style={{ color: 'white' }}>{tasaBcv.cargando ? '...' : `${tasaBcv.precio.toFixed(2)} Bs`}</strong>
@@ -626,7 +640,13 @@ export function Autocotizador() {
               </div>
               
               <div className="catalog-stats-badge">
-                Mostrando <strong>{filteredProducts.length}</strong> de <strong>{products.length}</strong> productos
+                <span>Mostrando <strong>{filteredProducts.length}</strong> de <strong>{products.length}</strong> productos</span>
+                {isMobile && !tasaBcv.cargando && (
+                  <span className="mobile-tasa-badge">
+                    <span className="bcv-rate-dot-pulse" style={{ display: 'inline-block', width: '6px', height: '6px', marginRight: '5px', backgroundColor: '#22c55e' }}></span>
+                    Tasa BCV: <strong>{tasaBcv.precio.toFixed(2)} Bs</strong>
+                  </span>
+                )}
               </div>
             </div>
 
@@ -654,452 +674,129 @@ export function Autocotizador() {
             ) : (
               <>
                 <div className="amazon-products-grid">
-                {paginatedProducts.map((product) => {
-                  const isSelected = selectedItems[product.id] !== undefined;
-                  const currentQty = selectedItems[product.id] || 1;
-                  
-                  // Conversion formula
-                  const priceUsdBcv = product.precio_usd * factor;
-                  const priceVes    = product.precio_usd * tasaBcv.tasaUsdt;
-
-                  // Read specs for dynamic technical badges on the card
-                  const specs = getProductSpecs(product);
-                  const specsArray = Object.entries(specs).slice(0, 2); // Show first 2 attributes
-
-                  return (
-                    <article 
-                      key={product.id}
-                      className={`product-visual-card ${isSelected ? 'selected' : ''}`}
-                    >
-                      {/* Image Thumbnail Header */}
-                      <div className="product-img-wrapper">
-                        <img 
-                          src={product.imagen_url || '/assets/product_placeholder.png'} 
-                          alt={product.nombre}
-                          className="product-img"
-                          loading="lazy"
-                        />
-                        <div className="product-badge-category">
-                          {getCategoryLabel(product.categoria)}
-                        </div>
-                        
-                        <div className="product-badge-stock">
-                          <span className="product-stock-dot"></span>
-                          Stock: {product.stock_actual} {product.unidad}
-                        </div>
-
-                        {/* Specs Overlay Button */}
-                        <button 
-                          type="button"
-                          className="product-badge-info-btn"
-                          onClick={(e) => { e.stopPropagation(); setSelectedSpecProduct(product); }}
-                          title="Ver Ficha Técnica"
-                        >
-                          <svg style={{ width: '14px', height: '14px', fill: 'currentColor' }} viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                          </svg>
-                        </button>
-                      </div>
-
-                      {/* Card Information */}
-                      <div className="product-visual-body">
-                        <span className="product-visual-code">{product.codigo}</span>
-                        <h4 className="product-visual-title" title={product.nombre}>
-                          {product.nombre}
-                        </h4>
-
-                        {/* Dynamic Mini Tech Badges */}
-                        <div className="product-mini-specs">
-                          {specsArray.map(([label, val]) => (
-                            <span key={label} className="mini-spec-badge" title={`${label}: ${val}`}>
-                              {val}
-                            </span>
-                          ))}
-                        </div>
-
-                        {/* Pricing Box */}
-                        <div className="product-visual-price-row">
-                          <div className="price-box">
-                            <span className="price-label">Precio Unitario</span>
-                            <span className="price-usd">
-                              ${priceUsdBcv.toFixed(2)} <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)' }}>USD</span>
-                            </span>
-                            <span className="price-ves">
-                              ≈ Bs. <strong>{priceVes.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Action Cart Controls */}
-                        <div className="card-action-container">
-                          {!isSelected ? (
-                            <button 
-                              type="button" 
-                              className="product-add-btn"
-                              onClick={() => handleToggleProduct(product)}
-                            >
-                              <svg style={{ width: '14px', height: '14px', fill: 'currentColor' }} viewBox="0 0 24 24">
-                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                              </svg>
-                              Añadir al Carrito
-                            </button>
-                          ) : (
-                            <div className="product-qty-selector">
-                              <button 
-                                type="button" 
-                                className="product-qty-btn"
-                                onClick={() => {
-                                  if (currentQty === 1) {
-                                    handleRemoveFromCart(product.id);
-                                  } else {
-                                    handleAdjustQuantity(product.id, -1, product.stock_actual);
-                                  }
-                                }}
-                                title={currentQty === 1 ? "Eliminar del presupuesto" : "Disminuir cantidad"}
-                                style={currentQty === 1 ? { color: '#ef4444' } : undefined}
-                              >
-                                {currentQty === 1 ? (
-                                  <svg style={{ width: '13px', height: '13px', fill: 'currentColor' }} viewBox="0 0 24 24">
-                                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                                  </svg>
-                                ) : (
-                                  '-'
-                                )}
-                              </button>
-                              <input 
-                                type="number" 
-                                className="product-qty-value"
-                                value={currentQty}
-                                onChange={(e) => handleInputChange(product.id, e.target.value, product.stock_actual)}
-                              />
-                              <button 
-                                type="button" 
-                                className="product-qty-btn"
-                                onClick={() => handleAdjustQuantity(product.id, 1, product.stock_actual)}
-                              >
-                                +
-                              </button>
-                            </div>
-                          )}
-                        </div>
-
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-
-              {/* Amazon Premium Pagination Bar */}
-              {totalPages > 1 && (
-                <div className="amazon-pagination-bar">
-                  <button 
-                    type="button" 
-                    className="pagination-btn arrow"
-                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                    disabled={currentPage === 1}
-                  >
-                    &larr; Anterior
-                  </button>
-                  
-                  <div className="pagination-numbers">
-                    {pageNumbers.map((pageVal, idx) => {
-                      if (typeof pageVal === 'number') {
-                        return (
-                          <button
-                            key={idx}
-                            type="button"
-                            className={`pagination-btn num ${currentPage === pageVal ? 'active' : ''}`}
-                            onClick={() => setCurrentPage(pageVal)}
-                          >
-                            {pageVal}
-                          </button>
-                        );
-                      } else {
-                        return (
-                          <span 
-                            key={idx} 
-                            style={{ 
-                              display: 'inline-flex', 
-                              alignItems: 'center', 
-                              justifyContent: 'center', 
-                              width: '34px', 
-                              height: '34px', 
-                              color: 'var(--text-muted)', 
-                              fontSize: '0.85rem',
-                              fontWeight: 700
-                            }}
-                          >
-                            {pageVal}
-                          </span>
-                        );
-                      }
-                    })}
-                  </div>
-
-                  <button 
-                    type="button" 
-                    className="pagination-btn arrow"
-                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                    disabled={currentPage === totalPages}
-                  >
-                    Siguiente &rarr;
-                  </button>
-                </div>
-              )}
-            </>
-          )}
-        </main>
-
-          {/* COLUMN 3: Sticky shopping cart and project form */}
-          <aside id="cart-sidebar-section" className="amazon-cart-sidebar">
-            <div className="cart-header">
-              <span className="cart-header-title">
-                <svg style={{ width: '16px', height: '16px', fill: 'currentColor' }} viewBox="0 0 24 24">
-                  <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.9 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
-                </svg>
-                Tu Presupuesto ({totalSelectedCount})
-              </span>
-              
-              {totalSelectedCount > 0 && (
-                <button 
-                  type="button" 
-                  className="cart-clear-btn"
-                  onClick={handleClearCart}
-                >
-                  Vaciar todo
-                </button>
-              )}
-            </div>
-
-            {/* Offline notification card inside cart */}
-            {!isOnline && (
-              <div className="offline-warning-card">
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                </svg>
-                <span>Offline: Copiaremos tu ticket al portapapeles.</span>
-              </div>
-            )}
-
-            {/* Cart list content */}
-            {totalSelectedCount === 0 ? (
-              <div className="cart-empty-wrapper">
-                <svg className="cart-empty-icon" viewBox="0 0 24 24" style={{ fill: 'currentColor' }}>
-                  <path d="M17.21 9l-4.38-6.56c-.19-.28-.51-.42-.83-.42-.32 0-.64.14-.83.43L6.79 9H2c-1.1 0-2 .9-2 2v2c0 .96.69 1.76 1.62 1.97L3.84 21c.15.57.66.97 1.25.97h13.82c.59 0 1.1-.4 1.25-.97l2.22-6.03c.93-.21 1.62-1.01 1.62-1.97v-2c0-1.1-.9-2-2-2h-4.79zM9 6l3-4.5L15 6H9zm11 7H4v-2h16v2z"/>
-                </svg>
-                <div className="cart-empty-text">
-                  Su carrito está vacío.<br />
-                  Añada insumos del catálogo para elaborar su cotización.
-                </div>
-              </div>
-            ) : (
-              <>
-                <div className="cart-items-list">
-                  {Object.entries(selectedItems).map(([id, qty]) => {
-                    const prod = products.find(p => p.id === id);
-                    if (!prod) return null;
+                  {paginatedProducts.map((product) => {
+                    const isSelected = selectedItems[product.id] !== undefined;
+                    const currentQty = selectedItems[product.id] || 1;
                     
-                    const priceUsdBcv = prod.precio_usd * factor;
-                    const subtotalUsd  = priceUsdBcv * qty;
+                    const priceUsdBcv = product.precio_usd * factor;
+                    const priceVes    = product.precio_usd * tasaBcv.tasaUsdt;
 
                     return (
-                      <div key={id} className="cart-item-row">
-                        <img 
-                          src={prod.imagen_url || '/assets/product_placeholder.png'} 
-                          alt={prod.nombre} 
-                          className="cart-item-img"
-                        />
-                        
-                        <div className="cart-item-details">
-                          <h5 className="cart-item-title" title={prod.nombre}>
-                            {prod.nombre}
-                          </h5>
-                          <div className="cart-item-price-desc">
-                            {qty} {prod.unidad} x <strong>${priceUsdBcv.toFixed(2)}</strong>
-                          </div>
-                        </div>
-
-                        <div className="cart-item-actions">
-                          <strong style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>
-                            ${subtotalUsd.toFixed(2)}
-                          </strong>
-                          
-                          <button 
-                            type="button" 
-                            className="cart-item-delete"
-                            onClick={() => handleRemoveFromCart(prod.id)}
-                            title="Remover producto"
-                          >
-                            <svg style={{ width: '13px', height: '13px', fill: 'currentColor' }} viewBox="0 0 24 24">
-                              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
+                      <ProductVisualCard
+                        key={product.id}
+                        product={product}
+                        isSelected={isSelected}
+                        currentQty={currentQty}
+                        priceUsdBcv={priceUsdBcv}
+                        priceVes={priceVes}
+                        onToggle={handleToggleProduct}
+                        onRemove={handleRemoveFromCart}
+                        onAdjustQuantity={handleAdjustQuantity}
+                        onInputChange={handleInputChange}
+                        onShowSpecs={setSelectedSpecProduct}
+                      />
                     );
                   })}
                 </div>
 
-                {/* Checkout Details Form */}
-                <form className="checkout-details-form" onSubmit={handleSendQuote}>
-                  <div className="sidebar-title" style={{ paddingBottom: '8px', marginBottom: '4px' }}>
-                    👤 Información de Despacho
-                  </div>
-
-                  <div className="form-group" style={{ marginBottom: '10px' }}>
-                    <label className="form-label">Nombre y Apellido</label>
-                    <input 
-                      type="text" 
-                      className="form-input" 
-                      placeholder="Ej: Pedro Pérez"
-                      value={clientName}
-                      onChange={(e) => setClientName(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group" style={{ marginBottom: '10px' }}>
-                    <label className="form-label">Cédula de Identidad</label>
-                    <input 
-                      type="text" 
-                      className="form-input" 
-                      placeholder="Ej: V-12345678"
-                      value={clientCedula}
-                      onChange={(e) => setClientCedula(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group" style={{ marginBottom: '16px' }}>
-                    <label className="form-label">Dirección de Entrega</label>
-                    <textarea 
-                      className="form-input" 
-                      rows={2}
-                      placeholder="Ej: Av. Bolívar, Calle 4, Local 12-B..."
-                      value={clientAddress}
-                      onChange={(e) => setClientAddress(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  {/* Totals Summary */}
-                  <div className="checkout-totals-summary">
-                    <div className="total-row">
-                      <span className="total-label">Total en USD (BCV):</span>
-                      <span className="total-value-usd">${totalUsd.toFixed(2)}</span>
+                {/* Amazon Premium Pagination Bar */}
+                {totalPages > 1 && (
+                  <div className="amazon-pagination-bar">
+                    <button 
+                      type="button" 
+                      className="pagination-btn arrow"
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                    >
+                      &larr; Anterior
+                    </button>
+                    
+                    <div className="pagination-numbers">
+                      {pageNumbers.map((pageVal, idx) => {
+                        if (typeof pageVal === 'number') {
+                          return (
+                            <button
+                              key={idx}
+                              type="button"
+                              className={`pagination-btn num ${currentPage === pageVal ? 'active' : ''}`}
+                              onClick={() => setCurrentPage(pageVal)}
+                            >
+                              {pageVal}
+                            </button>
+                          );
+                        } else {
+                          return (
+                            <span 
+                              key={idx} 
+                              style={{ 
+                                display: 'inline-flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center', 
+                                width: '34px', 
+                                height: '34px', 
+                                color: 'var(--text-muted)', 
+                                fontSize: '0.85rem',
+                                fontWeight: 700
+                              }}
+                            >
+                              {pageVal}
+                            </span>
+                          );
+                        }
+                      })}
                     </div>
 
-                    <div className="total-row" style={{ marginTop: '2px' }}>
-                      <span className="total-label">Total en Bolívares (VES):</span>
-                      <span className="total-value-ves">
-                        Bs. {totalVes.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                      </span>
-                    </div>
-
-                    <div className="checkout-rates-info">
-                      Tasa BCV oficial: <strong>{tasaBcv.precio.toFixed(2)} Bs/$</strong>
-                    </div>
+                    <button 
+                      type="button" 
+                      className="pagination-btn arrow"
+                      onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                      disabled={currentPage === totalPages}
+                    >
+                      Siguiente &rarr;
+                    </button>
                   </div>
-
-                  {/* Submit CTA */}
-                  <button 
-                    type="submit" 
-                    className="checkout-submit-btn"
-                    disabled={totalSelectedCount === 0 || clientName.trim() === '' || clientCedula.trim() === '' || clientAddress.trim() === ''}
-                  >
-                    <span>Contactar con un Asesor Comercial</span>
-                    <svg style={{ width: '16px', height: '16px', fill: 'currentColor' }} viewBox="0 0 24 24">
-                      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                    </svg>
-                  </button>
-                </form>
+                )}
               </>
             )}
+          </main>
 
+          {/* COLUMN 3: Sticky shopping cart and project form */}
+          <aside id="cart-sidebar-section" className="amazon-cart-sidebar">
+            <CartDrawer {...sharedCartProps} isDrawer={false} />
           </aside>
 
         </div>
       </section>
 
       {/* Technical Spec Sheet Modal Overlay */}
-      <div className={`specs-modal-overlay ${selectedSpecProduct ? 'active' : ''}`} onClick={() => setSelectedSpecProduct(null)}>
-        {selectedSpecProduct && currentSpecSheet && (
-          <div className="specs-modal-card" onClick={(e) => e.stopPropagation()}>
-            <button className="specs-modal-close" onClick={() => setSelectedSpecProduct(null)}>&times;</button>
-            
-            <h3 className="specs-modal-title">Ficha Técnica Oficial</h3>
-            <div className="specs-modal-code">{selectedSpecProduct.codigo}</div>
-            
-            <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '8px' }}>
-              {selectedSpecProduct.nombre}
-            </h4>
-            
-            <p className="specs-modal-desc" style={{ fontSize: '0.8rem', marginBottom: '16px', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-              {selectedSpecProduct.descripcion || 'Material siderúrgico de primera calidad certificado bajo estándares internacionales para obras civiles e infraestructura pesada.'}
-            </p>
+      <SpecsModal
+        product={selectedSpecProduct}
+        isAlreadyInCart={selectedSpecProduct ? selectedItems[selectedSpecProduct.id] !== undefined : false}
+        onClose={() => setSelectedSpecProduct(null)}
+        onAddToCart={() => selectedSpecProduct && handleToggleProduct(selectedSpecProduct)}
+      />
 
-            <table className="specs-table" style={{ marginBottom: '20px', width: '100%', borderCollapse: 'collapse' }}>
-              <tbody>
-                <tr className="specs-table-row" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <td className="specs-table-label" style={{ fontSize: '0.75rem', padding: '8px 0', color: 'var(--text-muted)' }}>Categoría</td>
-                  <td className="specs-table-value" style={{ fontSize: '0.8rem', padding: '8px 0', fontWeight: 600, color: 'white', textAlign: 'right' }}>{getCategoryLabel(selectedSpecProduct.categoria)}</td>
-                </tr>
-                <tr className="specs-table-row" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <td className="specs-table-label" style={{ fontSize: '0.75rem', padding: '8px 0', color: 'var(--text-muted)' }}>Unidad de Medida</td>
-                  <td className="specs-table-value" style={{ fontSize: '0.8rem', padding: '8px 0', fontWeight: 600, color: 'white', textAlign: 'right' }}>{selectedSpecProduct.unidad}</td>
-                </tr>
-                {Object.entries(currentSpecSheet).map(([label, val]) => (
-                  <tr key={label} className="specs-table-row" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                    <td className="specs-table-label" style={{ fontSize: '0.75rem', padding: '8px 0', color: 'var(--text-muted)' }}>{label}</td>
-                    <td className="specs-table-value" style={{ fontSize: '0.8rem', padding: '8px 0', fontWeight: 600, color: 'white', textAlign: 'right' }}>{val}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button 
-                type="button" 
-                className="btn btn-primary" 
-                style={{ flex: 1, padding: '12px', fontSize: '0.85rem', justifyContent: 'center', borderRadius: '10px' }}
-                onClick={() => {
-                  const isSelected = selectedItems[selectedSpecProduct.id] !== undefined;
-                  if (!isSelected) {
-                    handleToggleProduct(selectedSpecProduct);
-                  }
-                  setSelectedSpecProduct(null);
-                }}
-              >
-                {selectedItems[selectedSpecProduct.id] !== undefined ? 'Ya en Carrito' : 'Agregar a Cotización'}
-              </button>
-              
-              <button 
-                type="button" 
-                className="btn" 
-                style={{ padding: '12px 18px', fontSize: '0.85rem', backgroundColor: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '10px' }}
-                onClick={() => setSelectedSpecProduct(null)}
-              >
-                Cerrar Ficha
-              </button>
-            </div>
-          </div>
-        )}
+      {/* Mobile Cart Drawer Overlay & Container */}
+      <div className={`cart-drawer-overlay ${isCartDrawerOpen ? 'active' : ''}`} onClick={() => setIsCartDrawerOpen(false)} />
+      <div className={`cart-drawer-container ${isCartDrawerOpen ? 'active' : ''}`}>
+        <CartDrawer
+          {...sharedCartProps}
+          isDrawer={true}
+          onCloseDrawer={() => setIsCartDrawerOpen(false)}
+        />
       </div>
 
       {totalSelectedCount > 0 && (
-        <a 
-          href="#cart-sidebar-section" 
+        <button 
+          type="button" 
           className="floating-mobile-cart"
-          onClick={(e) => {
-            e.preventDefault();
-            document.getElementById('cart-sidebar-section')?.scrollIntoView({ behavior: 'smooth' });
-          }}
+          onClick={() => setIsCartDrawerOpen(true)}
         >
           <svg style={{ width: '24px', height: '24px', fill: 'currentColor' }} viewBox="0 0 24 24">
             <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.9 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
           </svg>
           <span className="floating-mobile-cart-badge">{totalSelectedCount}</span>
-        </a>
+        </button>
       )}
     </>
   );

@@ -118,7 +118,7 @@ export function Header({ standalone = false }: HeaderProps) {
             )}
           </ul>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             {showInstallBtn && (
               <button 
                 className="pwa-install-btn nav-cta-install" 
@@ -147,7 +147,7 @@ export function Header({ standalone = false }: HeaderProps) {
             className="menu-toggle" 
             onClick={() => setMobileMenuOpen(true)}
             aria-label="Abrir menú"
-            style={{ display: standalone ? 'none' : 'block' }}
+            style={{ display: standalone ? 'none' : undefined }}
           >
             <svg style={{ width: '24px', height: '24px', fill: 'currentColor' }} viewBox="0 0 24 24">
               <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
