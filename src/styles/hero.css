@@ -283,3 +283,43 @@
     font-size: 2.25rem;
   }
 }
+
+@media (max-width: 480px) {
+  .instagram-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+  .ig-avatar-wrapper {
+    width: 64px;
+    height: 64px;
+  }
+  .ig-header-top {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .ig-stat-val {
+    font-size: 0.95rem;
+  }
+  .ig-stat-lbl {
+    font-size: 0.65rem;
+  }
+  .ig-username {
+    font-size: 1rem;
+  }
+  .ig-bio {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .hero-ctas .btn {
+    text-align: center;
+  }
+}
+
