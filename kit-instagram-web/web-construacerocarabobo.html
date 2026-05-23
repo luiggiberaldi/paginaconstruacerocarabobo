@@ -1,0 +1,2149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Construacero Carabobo | Mayorista de Acero y Materiales de Construcción</title>
+  <meta name="description" content="Distribuidor líder de acero, cabillas, vigas, cemento y materiales de construcción en Carabobo. Calidad industrial para tus obras civiles y metalúrgicas.">
+  
+  <!-- SEO & Favicon -->
+  <link rel="icon" type="image/x-icon" href="assets/instagram/profile.jpg">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* CSS Custom Properties - Modern Industrial Luxe System */
+    :root {
+      --bg-darker: #0c0e12;
+      --bg-dark: #12151c;
+      --bg-card: #181d26;
+      --bg-card-hover: #202632;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      
+      /* Molten Steel & Safety Amber Palette */
+      --accent: #f97316;
+      --accent-hover: #ea580c;
+      --accent-light: rgba(249, 115, 22, 0.1);
+      --steel-blue: #3b82f6;
+      
+      --font-headings: 'Outfit', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      
+      --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-bounce: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Global Reset & Base Styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) var(--bg-darker);
+    }
+
+    body {
+      background-color: var(--bg-darker);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-darker);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-headings);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: var(--transition-smooth);
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Layout Utilities */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section-padding {
+      padding: 100px 0;
+    }
+
+    /* Glowing Decorators */
+    .glow-blur {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(249, 115, 22, 0.15) 0%, rgba(249, 115, 22, 0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Header & Fixed Navigation */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      transition: var(--transition-smooth);
+      border-bottom: 1px solid transparent;
+    }
+
+    header.scrolled {
+      background-color: rgba(12, 14, 18, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(243, 244, 246, 0.08);
+      padding: 12px 0;
+    }
+
+    .nav-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      transition: var(--transition-smooth);
+    }
+
+    header.scrolled .nav-wrapper {
+      padding: 8px 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      font-family: var(--font-headings);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .logo-icon {
+      background: linear-gradient(135deg, var(--accent), #f43f5e);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      box-shadow: 0 0 15px rgba(249, 115, 22, 0.4);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      position: relative;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--text-main);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: var(--transition-smooth);
+    }
+
+    .nav-links a:hover::after, .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      background-color: var(--accent);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 1px solid transparent;
+      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+    }
+
+    .nav-cta:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(249, 115, 22, 0.5);
+    }
+
+    /* Hero Section with Premium Instagram Card */
+    .hero {
+      position: relative;
+      padding-top: 160px;
+      padding-bottom: 80px;
+      background: radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.08) 0%, rgba(0,0,0,0) 50%);
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-content h2 {
+      color: var(--accent);
+      text-transform: uppercase;
+      font-size: 0.95rem;
+      letter-spacing: 0.2em;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-content h2::after {
+      content: '';
+      display: inline-block;
+      width: 40px;
+      height: 2px;
+      background-color: var(--accent);
+    }
+
+    .hero-content h1 {
+      font-size: 3.5rem;
+      line-height: 1.15;
+      margin-bottom: 24px;
+      font-weight: 800;
+    }
+
+    .hero-content p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      max-width: 520px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #ea580c);
+      color: white;
+      box-shadow: 0 8px 30px rgba(249, 115, 22, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(249, 115, 22, 0.6);
+    }
+
+    .btn-secondary {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-3px);
+    }
+
+    /* Instagram Live Card Mockup */
+    .instagram-card {
+      background-color: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 28px;
+      position: relative;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+      z-index: 10;
+      overflow: hidden;
+      transition: var(--transition-smooth);
+    }
+
+    .instagram-card:hover {
+      border-color: rgba(249, 115, 22, 0.3);
+      box-shadow: 0 35px 70px rgba(249, 115, 22, 0.15);
+    }
+
+    /* Instagram Header Top */
+    .ig-header-top {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    /* Instagram Avatar story animation */
+    .ig-avatar-wrapper {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      flex-shrink: 0;
+    }
+
+    .ig-avatar-ring {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7);
+      animation: spin-ring 8s linear infinite;
+    }
+
+    @keyframes spin-ring {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .ig-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid var(--bg-card);
+      object-fit: cover;
+      position: relative;
+      z-index: 2;
+    }
+
+    .ig-badge-live {
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #ff3b30;
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 2px solid var(--bg-card);
+      letter-spacing: 0.05em;
+      z-index: 5;
+    }
+
+    .ig-meta-stats {
+      display: flex;
+      gap: 20px;
+      flex-grow: 1;
+      justify-content: space-around;
+      text-align: center;
+    }
+
+    .ig-stat-val {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+      font-family: var(--font-headings);
+    }
+
+    .ig-stat-lbl {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Instagram Handle & Bio */
+    .ig-profile-info {
+      margin-bottom: 24px;
+    }
+
+    .ig-handle-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .ig-username {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .ig-verified-badge {
+      display: inline-flex;
+      color: var(--steel-blue);
+      width: 18px;
+      height: 18px;
+    }
+
+    .ig-category {
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .ig-bio {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      background-color: rgba(255, 255, 255, 0.02);
+      border-left: 3px solid var(--accent);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .ig-bio-strong {
+      color: var(--text-main);
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* Mini Grid Inside Instagram Card */
+    .ig-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 20px;
+    }
+
+    .ig-mini-photo {
+      aspect-ratio: 1;
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ig-mini-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition-smooth);
+    }
+
+    .ig-mini-photo::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      transition: var(--transition-smooth);
+    }
+
+    .ig-mini-photo:hover img {
+      transform: scale(1.1);
+    }
+
+    .ig-mini-photo:hover::after {
+      opacity: 1;
+    }
+
+    /* Floating Stats Bar */
+    .stats-bar {
+      background-color: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 40px;
+      position: relative;
+      margin-top: -40px;
+      z-index: 20;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .stats-bar-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      text-align: center;
+    }
+
+    .stats-item {
+      position: relative;
+    }
+
+    .stats-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: -15px;
+      top: 15%;
+      height: 70%;
+      width: 1px;
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .stats-num {
+      font-size: 2.5rem;
+      font-weight: 800;
+      font-family: var(--font-headings);
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stats-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Products / Catalog Section */
+    .section-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 60px auto;
+    }
+
+    .section-header h2 {
+      font-size: 2.25rem;
+      margin-bottom: 16px;
+    }
+
+    .section-header h2 span {
+      color: var(--accent);
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .product-card {
+      background-color: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      padding: 32px;
+      transition: var(--transition-bounce);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), #f43f5e);
+      opacity: 0;
+      transition: var(--transition-smooth);
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(249, 115, 22, 0.2);
+      background-color: var(--bg-card-hover);
+    }
+
+    .product-card:hover::before {
+      opacity: 1;
+    }
+
+    .product-icon {
+      width: 56px;
+      height: 56px;
+      background-color: var(--accent-light);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      margin-bottom: 24px;
+      font-size: 1.5rem;
+    }
+
+    .product-card h3 {
+      font-size: 1.35rem;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    .product-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .product-specs {
+      list-style: none;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .product-specs li {
+      background-color: rgba(255, 255, 255, 0.04);
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* About Section */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .about-img-box {
+      position: relative;
+    }
+
+    .about-img-wrapper {
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    }
+
+    .about-img-wrapper img {
+      width: 100%;
+      height: 480px;
+      object-fit: cover;
+    }
+
+    .about-badge {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      background-color: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .about-badge-icon {
+      width: 44px;
+      height: 44px;
+      background-color: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .about-badge-text h4 {
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .about-badge-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .about-content h3 {
+      color: var(--accent);
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 16px;
+    }
+
+    .about-content h2 {
+      font-size: 2.25rem;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .about-content p {
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      font-size: 1.05rem;
+    }
+
+    .about-features {
+      margin-top: 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .about-feat-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .about-feat-icon {
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .about-feat-text h4 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .about-feat-text p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0;
+    }
+
+    /* Instagram Live Feed / Gallery */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .gallery-item {
+      aspect-ratio: 1;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition-bounce);
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(12, 14, 18, 0.9) 0%, rgba(12, 14, 18, 0.4) 50%, rgba(12, 14, 18, 0.1) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+      opacity: 0;
+      transition: var(--transition-smooth);
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.08);
+    }
+
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+    }
+
+    .gallery-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .gallery-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .gallery-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Cotizador / WhatsApp Form Section */
+    .quote-box {
+      background: linear-gradient(135deg, var(--bg-card) 0%, #1e2430 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 28px;
+      padding: 50px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quote-box::after {
+      content: '';
+      position: absolute;
+      bottom: -150px;
+      right: -150px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(249, 115, 22, 0.1) 0%, rgba(0,0,0,0) 75%);
+      pointer-events: none;
+    }
+
+    .quote-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .quote-info h2 {
+      font-size: 2.25rem;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .quote-info h2 span {
+      color: var(--accent);
+    }
+
+    .quote-info p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 30px;
+    }
+
+    .quote-features-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .quote-feat-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+    }
+
+    .quote-feat-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    /* Interactive Product Selector */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-input {
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      color: white;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      transition: var(--transition-smooth);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
+    }
+
+    .material-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .material-opt {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background-color: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      padding: 14px 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+    }
+
+    .material-opt:hover {
+      border-color: rgba(249, 115, 22, 0.3);
+      background-color: rgba(249, 115, 22, 0.02);
+    }
+
+    .material-opt.selected {
+      border-color: var(--accent);
+      background-color: var(--accent-light);
+      color: white;
+    }
+
+    .material-opt-checkbox {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 2px solid rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .material-opt.selected .material-opt-checkbox {
+      border-color: var(--accent);
+      background-color: var(--accent);
+    }
+
+    .material-opt.selected .material-opt-checkbox::after {
+      content: '✓';
+      font-size: 0.7rem;
+      color: white;
+      font-weight: bold;
+    }
+
+    /* Testimonials Section */
+    .testi-carousel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .testi-card {
+      background-color: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      padding: 36px;
+      position: relative;
+    }
+
+    .testi-quote-icon {
+      font-family: var(--font-headings);
+      font-size: 5rem;
+      color: rgba(249, 115, 22, 0.1);
+      position: absolute;
+      top: 10px;
+      right: 24px;
+      line-height: 1;
+    }
+
+    .testi-rating {
+      color: #fbbf24;
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+    }
+
+    .testi-content {
+      font-size: 1rem;
+      color: var(--text-main);
+      margin-bottom: 24px;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .testi-user {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .testi-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background-color: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: 1px solid rgba(249, 115, 22, 0.3);
+    }
+
+    .testi-details h4 {
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+
+    .testi-details p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Footer & Contact info */
+    footer {
+      background-color: var(--bg-darker);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 80px 0 40px 0;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr 1fr;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+
+    .footer-desc {
+      color: var(--text-muted);
+      margin-top: 16px;
+      margin-bottom: 24px;
+      max-width: 320px;
+      font-size: 0.95rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 12px;
+    }
+
+    .social-btn {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .social-btn:hover {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .footer-column h3 {
+      font-size: 1.1rem;
+      margin-bottom: 24px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .footer-column h3::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 24px;
+      height: 2px;
+      background-color: var(--accent);
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+      padding-left: 4px;
+    }
+
+    .contact-info-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-info-item {
+      display: flex;
+      gap: 12px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .contact-info-icon {
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .contact-info-item strong {
+      color: var(--text-main);
+    }
+
+    .copyright {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Scroll Animation Reveal Styles */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stagger-child {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: var(--transition-smooth);
+    }
+
+    .reveal.active .stagger-child {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal.active .stagger-child:nth-child(1) { transition-delay: 0.1s; }
+    .reveal.active .stagger-child:nth-child(2) { transition-delay: 0.2s; }
+    .reveal.active .stagger-child:nth-child(3) { transition-delay: 0.3s; }
+    .reveal.active .stagger-child:nth-child(4) { transition-delay: 0.4s; }
+
+    /* Responsive Design Media Queries */
+    @media (max-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 50px;
+        text-align: center;
+      }
+
+      .hero-content h1 {
+        font-size: 3rem;
+      }
+
+      .hero-content p {
+        margin: 0 auto 32px auto;
+      }
+
+      .hero-ctas {
+        justify-content: center;
+      }
+
+      .instagram-card {
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .stats-bar-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+
+      .stats-item:nth-child(2)::after {
+        display: none;
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .quote-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none; /* Mobile menu can be expanded or toggle */
+      }
+
+      .logo {
+        font-size: 1.15rem;
+      }
+
+      .section-padding {
+        padding: 60px 0;
+      }
+
+      .hero {
+        padding-top: 120px;
+        padding-bottom: 40px;
+      }
+
+      .hero-content h1 {
+        font-size: 2.25rem;
+      }
+
+      .stats-bar {
+        padding: 24px;
+      }
+
+      .stats-num {
+        font-size: 2rem;
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .testi-carousel {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .copyright {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Glow Backgrounds -->
+  <div class="glow-blur" style="top: 10%; left: -5%;"></div>
+  <div class="glow-blur" style="top: 50%; right: -5%;"></div>
+  <div class="glow-blur" style="bottom: 5%; left: 30%;"></div>
+
+  <!-- Header / Navigation -->
+  <header id="site-header">
+    <div class="container nav-wrapper">
+      <a href="#" class="logo" style="display:flex;align-items:center;gap:10px;">
+        <img src="assets/logo.png" alt="Construacero Logo" style="height:36px;width:auto;object-fit:contain;border-radius:6px;">
+        Construacero<span>Carabobo</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#" class="active">Inicio</a></li>
+        <li><a href="#productos">Materiales</a></li>
+        <li><a href="#nosotros">Nosotros</a></li>
+        <li><a href="#catalogo">Catálogo IG</a></li>
+        <li><a href="#cotizar">Cotizar</a></li>
+      </ul>
+      <a href="#cotizar" class="nav-cta">Solicitar Catálogo</a>
+    </div>
+  </header>
+
+  <!-- Hero Section with Instagram Card -->
+  <section class="hero">
+    <div class="container hero-grid">
+      
+      <!-- Text Hero Column -->
+      <div class="hero-content">
+        <h2>
+          <svg style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5;vertical-align:middle;margin-right:8px;display:inline-block;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Distribución de Acero e Hierro
+        </h2>
+        <h1>Suministramos el Acero que Soporta tus Grandes Ideas</h1>
+        <p>Distribución mayorista y detal de cabillas, vigas, perfiles de hierro, cemento y materiales de construcción con envíos directos a todo el país.</p>
+        <div class="hero-ctas">
+          <a href="#cotizar" class="btn btn-primary">
+            <span>Cotizar Materiales</span>
+            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+          </a>
+          <a href="#productos" class="btn btn-secondary">Ver Catálogo</a>
+        </div>
+      </div>
+
+      <!-- Instagram Premium Card Column -->
+      <div class="instagram-card">
+        
+        <!-- IG Card Top Header -->
+        <div class="ig-header-top">
+          <!-- Avatar with dynamic Ring -->
+          <div class="ig-avatar-wrapper">
+            <div class="ig-avatar-ring"></div>
+            <img class="ig-avatar" src="assets/instagram/profile.jpg" alt="Construacero Carabobo">
+            <span class="ig-badge-live">ACTIVO</span>
+          </div>
+          
+          <!-- Stats -->
+          <div class="ig-meta-stats">
+            <div>
+              <div class="ig-stat-val">133</div>
+              <div class="ig-stat-lbl">Posts</div>
+            </div>
+            <div>
+              <div class="ig-stat-val">9,447</div>
+              <div class="ig-stat-lbl">Seguidores</div>
+            </div>
+            <div>
+              <div class="ig-stat-val">1,560</div>
+              <div class="ig-stat-lbl">Seguidos</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Handle, Verified & Bio -->
+        <div class="ig-profile-info">
+          <div class="ig-handle-row">
+            <span class="ig-username">construacerocarabobo</span>
+            <!-- Blue Verified Badge -->
+            <span class="ig-verified-badge">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+              </svg>
+            </span>
+          </div>
+          <div class="ig-category">Ferretería Industrial • Suministros Sólidos</div>
+          <div class="ig-bio">
+            <span class="ig-bio-strong">Construacero Carabobo</span>
+            🏢 Suministros siderúrgicos de alta resistencia.<br>
+            🏗️ Cabillas, Vigas, Láminas y Perfiles a nivel nacional.<br>
+            📦 Venta al Mayor y Detal para obras civiles.
+          </div>
+        </div>
+
+        <!-- IG Buttons Mockup -->
+        <div style="display:flex;gap:8px;margin-top:16px;">
+          <a href="https://www.instagram.com/construacerocarabobo/" target="_blank" style="flex:1;background-color:var(--accent);color:white;text-align:center;padding:10px;border-radius:10px;font-weight:700;font-size:0.85rem;box-shadow:0 4px 10px rgba(249,115,22,0.2);">Seguir Perfil</a>
+          <a href="#cotizar" style="flex:1;background-color:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:white;text-align:center;padding:10px;border-radius:10px;font-weight:700;font-size:0.85rem;">Enviar Mensaje</a>
+        </div>
+
+        <!-- Mini Grid (first 6 photos) -->
+        <div class="ig-mini-grid">
+          <a href="#catalogo" class="ig-mini-photo"><img src="assets/instagram/post-1.jpg" alt="Post 1"></a>
+          <a href="#catalogo" class="ig-mini-photo"><img src="assets/instagram/post-2.jpg" alt="Post 2"></a>
+          <a href="#catalogo" class="ig-mini-photo"><img src="assets/instagram/post-3.jpg" alt="Post 3"></a>
+          <a href="#catalogo" class="ig-mini-photo"><img src="assets/instagram/post-4.jpg" alt="Post 4"></a>
+          <a href="#catalogo" class="ig-mini-photo"><img src="assets/instagram/post-5.jpg" alt="Post 5"></a>
+          <a href="#catalogo" class="ig-mini-photo"><img src="assets/instagram/post-6.jpg" alt="Post 6"></a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Community Counter Stats Bar -->
+  <section class="container" style="position:relative; z-index:30;">
+    <div class="stats-bar reveal">
+      <div class="stats-bar-grid">
+        <div class="stats-item">
+          <div class="stats-num" data-val="9447">0</div>
+          <div class="stats-label">Comunidad Digital</div>
+        </div>
+        <div class="stats-item">
+          <div class="stats-num" data-val="12500">0</div>
+          <div class="stats-label">Toneladas Despachadas</div>
+        </div>
+        <div class="stats-item">
+          <div class="stats-num" data-val="150">0</div>
+          <div class="stats-label">Obras Civiles Abastecidas</div>
+        </div>
+        <div class="stats-item">
+          <div class="stats-num" data-val="100">0</div>
+          <div class="stats-label">% Eficiencia Entrega</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products & Materials Catalog -->
+  <section id="productos" class="section-padding container reveal">
+    <div class="section-header">
+      <h2>Suministros <span>Siderúrgicos y Estructurales</span></h2>
+      <p>Materiales con certificaciones de calidad y resistencia máxima para cualquier tipo de desarrollo e infraestructura.</p>
+    </div>
+
+    <div class="product-grid">
+      
+      <!-- Card 1 -->
+      <div class="product-card stagger-child">
+        <div class="product-icon">
+          <svg style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;" viewBox="0 0 24 24">
+            <path d="M3 8h18M3 16h18" />
+            <path d="M7 6v4M12 6v4M17 6v4M7 14v4M12 14v4M17 14v4" />
+          </svg>
+        </div>
+        <h3>Cabillas de Refuerzo</h3>
+        <p>Acero de alta adherencia corrugado, ideal para armar estructuras de concreto armado y cimientos de alta carga en edificaciones.</p>
+        <ul class="product-specs">
+          <li>3/8"</li>
+          <li>1/2"</li>
+          <li>5/8"</li>
+          <li>3/4"</li>
+          <li>ASTM A615</li>
+        </ul>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="product-card stagger-child">
+        <div class="product-icon">
+          <svg style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;" viewBox="0 0 24 24">
+            <path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+            <path d="M4 9h16M4 15h16" />
+            <path d="M10 3v18M14 3v18" />
+          </svg>
+        </div>
+        <h3>Vigas e IPN / H-Beams</h3>
+        <p>Perfiles estructurales pesados laminados en caliente para pórticos, puentes, galpones industriales y soportes estructurales de gran luz.</p>
+        <ul class="product-specs">
+          <li>IPN 80-300</li>
+          <li>HEB</li>
+          <li>Conduven</li>
+          <li>Espesores variables</li>
+        </ul>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="product-card stagger-child">
+        <div class="product-icon">
+          <svg style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;" viewBox="0 0 24 24">
+            <path d="M12 2L2 7l10 5 10-5-10-5z" fill="rgba(249, 115, 22, 0.15)" />
+            <path d="M2 17l10 5 10-5" />
+            <path d="M2 12l10 5 10-5" />
+            <path d="M2 7l10 5 10-5" />
+          </svg>
+        </div>
+        <h3>Láminas e Hierro Plano</h3>
+        <p>Chapas y planchones de acero pulido y rugoso, cortados a medida para talleres metalúrgicos, tolvas y carrocerías industriales.</p>
+        <ul class="product-specs">
+          <li>Láminas Estriadas</li>
+          <li>Hierro Pulido</li>
+          <li>Negras</li>
+          <li>Galvanizadas</li>
+        </ul>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="product-card stagger-child">
+        <div class="product-icon">
+          <svg style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="8" rx="1" />
+            <rect x="3" y="13" width="8" height="8" rx="1" />
+            <rect x="13" y="13" width="8" height="8" rx="1" />
+            <path d="M8 7h.01M16 7h.01M7 17h.01M17 17h.01" stroke-width="3" />
+          </svg>
+        </div>
+        <h3>Cemento y Agregados</h3>
+        <p>Cemento Portland gris de alta resistencia inicial para mezclas de concreto estructural de alta durabilidad e impermeabilidad.</p>
+        <ul class="product-specs">
+          <li>Gris Tipo I</li>
+          <li>Sacos 42.5kg</li>
+          <li>Agregados limpios</li>
+        </ul>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="product-card stagger-child">
+        <div class="product-icon">
+          <svg style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;" viewBox="0 0 24 24">
+            <circle cx="8" cy="16" r="4" />
+            <circle cx="8" cy="16" r="1.5" />
+            <circle cx="16" cy="16" r="4" />
+            <circle cx="16" cy="16" r="1.5" />
+            <circle cx="12" cy="8" r="4" />
+            <circle cx="12" cy="8" r="1.5" />
+          </svg>
+        </div>
+        <h3>Tubería Estructural e Industrial</h3>
+        <p>Conductos redondos, cuadrados y rectangulares de acero al carbono soldados por resistencia eléctrica para conducción y soporte.</p>
+        <ul class="product-specs">
+          <li>Tubo Redondo</li>
+          <li>Estructural ECO</li>
+          <li>ISO 65</li>
+          <li>Sch 40 / 80</li>
+        </ul>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="product-card stagger-child">
+        <div class="product-icon">
+          <svg style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;" viewBox="0 0 24 24">
+            <path d="M5 3v18M12 3v18M19 3v18M3 5h18M3 12h18M3 19h18" />
+          </svg>
+        </div>
+        <h3>Mallas y Alambres</h3>
+        <p>Mallas electrosoldadas para refuerzo de losas de piso y alambres de amarre recocidos de alta ductilidad para enfierradores.</p>
+        <ul class="product-specs">
+          <li>Malla Trucson</li>
+          <li>Alambre Recocido</li>
+          <li>Clavos de Acero</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- About Us Section -->
+  <section id="nosotros" class="section-padding bg-dark" style="background-color: var(--bg-card);">
+    <div class="container about-grid reveal">
+      
+      <div class="about-img-box">
+        <div class="about-img-wrapper">
+          <img src="assets/instagram/post-3.jpg" alt="Acero Construacero">
+        </div>
+        <div class="about-badge">
+          <div class="about-badge-icon">
+            <svg style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:3;" viewBox="0 0 24 24">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          <div class="about-badge-text">
+            <h4>Calidad Certificada</h4>
+            <p>Resistencia bajo norma SENCAMER e ISO</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-content">
+        <h3>Trayectoria de Acero</h3>
+        <h2>Compromiso Inquebrantable en Cada Despacho</h2>
+        <p>En <strong>Construacero Carabobo</strong> nos especializamos en la distribución integral de materiales siderúrgicos para el sector construcción, metalmecánico e industrial de la región central del país.</p>
+        <p>Nuestra misión es abastecer a contratistas, constructoras e ingenieros con los insumos exactos requeridos en sus cálculos estructurales, garantizando los más altos estándares de flexión y resistencia a la tracción.</p>
+        
+        <div class="about-features">
+          <div class="about-feat-item">
+            <span class="about-feat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;display:block;">
+                <rect x="1" y="3" width="15" height="13" />
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                <circle cx="5.5" cy="18.5" r="2.5" />
+                <circle cx="18.5" cy="18.5" r="2.5" />
+              </svg>
+            </span>
+            <div class="about-feat-text">
+              <h4>Logística Nacional</h4>
+              <p>Despachos eficientes a todo el territorio nacional, coordinados de forma directa y segura hasta tu obra o negocio.</p>
+            </div>
+          </div>
+          <div class="about-feat-item">
+            <span class="about-feat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;display:block;">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                <line x1="7" y1="7" x2="7.01" y2="7" stroke-width="3" />
+              </svg>
+            </span>
+            <div class="about-feat-text">
+              <h4>Precios de Distribuidor</h4>
+              <p>Cotizaciones altamente competitivas adaptadas a presupuestos de pequeña y gran escala.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Dynamic Instagram Real Gallery -->
+  <section id="catalogo" class="section-padding container reveal">
+    <div class="section-header">
+      <h2>Catálogo de <span>Galería Real</span></h2>
+      <p>Explora nuestras publicaciones más recientes de Instagram con fotos reales de los materiales que tenemos listos en inventario.</p>
+    </div>
+
+    <div class="gallery-grid">
+      
+      <!-- Item 1 -->
+      <div class="gallery-item">
+        <img src="assets/instagram/post-1.jpg" alt="Post 1">
+        <div class="gallery-overlay">
+          <div class="gallery-meta">
+            <span>❤️ 125</span>
+            <span>💬 12</span>
+          </div>
+          <p class="gallery-text">Llegada de nuevo lote de cabillas corrugadas listas para despacho inmediato a todo el país.</p>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="gallery-item">
+        <img src="assets/instagram/post-2.jpg" alt="Post 2">
+        <div class="gallery-overlay">
+          <div class="gallery-meta">
+            <span>❤️ 98</span>
+            <span>💬 8</span>
+          </div>
+          <p class="gallery-text">Vigas IPN de alta resistencia listas en nuestro galpón industrial. Materiales de primera.</p>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="gallery-item">
+        <img src="assets/instagram/post-3.jpg" alt="Post 3">
+        <div class="gallery-overlay">
+          <div class="gallery-meta">
+            <span>❤️ 142</span>
+            <span>💬 15</span>
+          </div>
+          <p class="gallery-text">Perfiles Conduven y tubos estructurales. Variedad de medidas y espesores para tus proyectos metalúrgicos.</p>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="gallery-item">
+        <img src="assets/instagram/post-4.jpg" alt="Post 4">
+        <div class="gallery-overlay">
+          <div class="gallery-meta">
+            <span>❤️ 85</span>
+            <span>💬 4</span>
+          </div>
+          <p class="gallery-text">Distribución de cemento Portland tipo I. El mejor agarre para obras de concreto reforzado.</p>
+        </div>
+      </div>
+
+      <!-- Item 5 -->
+      <div class="gallery-item">
+        <img src="assets/instagram/post-5.jpg" alt="Post 5">
+        <div class="gallery-overlay">
+          <div class="gallery-meta">
+            <span>❤️ 110</span>
+            <span>💬 9</span>
+          </div>
+          <p class="gallery-text">Planchones e hierro plano cortado bajo medida para bases estructurales pesadas.</p>
+        </div>
+      </div>
+
+      <!-- Item 6 -->
+      <div class="gallery-item">
+        <img src="assets/instagram/post-6.jpg" alt="Post 6">
+        <div class="gallery-overlay">
+          <div class="gallery-meta">
+            <span>❤️ 76</span>
+            <span>💬 5</span>
+          </div>
+          <p class="gallery-text">Laminados en frío y caliente. Todo el stock ferretero industrial que necesitas.</p>
+        </div>
+      </div>
+
+      <!-- Item 7 -->
+      <div class="gallery-item">
+        <img src="assets/instagram/post-7.jpg" alt="Post 7">
+        <div class="gallery-overlay">
+          <div class="gallery-meta">
+            <span>❤️ 94</span>
+            <span>💬 11</span>
+          </div>
+          <p class="gallery-text">Carga lista para despacho nacional. Nuestra logística y flota propia garantizan tiempos récord en cada entrega.</p>
+        </div>
+      </div>
+
+      <!-- Item 8 -->
+      <div class="gallery-item">
+        <img src="assets/instagram/post-8.jpg" alt="Post 8">
+        <div class="gallery-overlay">
+          <div class="gallery-meta">
+            <span>❤️ 153</span>
+            <span>💬 20</span>
+          </div>
+          <p class="gallery-text">Mallas electrosoldadas y alambres de amarre para vaciados perfectos. ¡Consúltanos!</p>
+        </div>
+      </div>
+
+      <!-- Item 9 -->
+      <div class="gallery-item">
+        <img src="assets/instagram/post-9.jpg" alt="Post 9">
+        <div class="gallery-overlay">
+          <div class="gallery-meta">
+            <span>❤️ 115</span>
+            <span>💬 6</span>
+          </div>
+          <p class="gallery-text">Suministros de acero inoxidable e industrial para requerimientos especiales de resistencia química.</p>
+        </div>
+      </div>
+
+      <!-- Item 10 -->
+      <div class="gallery-item">
+        <img src="assets/instagram/post-10.jpg" alt="Post 10">
+        <div class="gallery-overlay">
+          <div class="gallery-meta">
+            <span>❤️ 122</span>
+            <span>💬 18</span>
+          </div>
+          <p class="gallery-text">Tuberías estructurales ECO. La solución económica y robusta para cercados y pórticos livianos.</p>
+        </div>
+      </div>
+
+      <!-- Item 11 -->
+      <div class="gallery-item">
+        <img src="assets/instagram/post-11.jpg" alt="Post 11">
+        <div class="gallery-overlay">
+          <div class="gallery-meta">
+            <span>❤️ 89</span>
+            <span>💬 4</span>
+          </div>
+          <p class="gallery-text">Soportes estructurales construidos a base de nuestras vigas. Garantía de solidez.</p>
+        </div>
+      </div>
+
+      <!-- Item 12 -->
+      <div class="gallery-item">
+        <img src="assets/instagram/post-12.jpg" alt="Post 12">
+        <div class="gallery-overlay">
+          <div class="gallery-meta">
+            <span>❤️ 130</span>
+            <span>💬 14</span>
+          </div>
+          <p class="gallery-text">Todo tipo de materiales siderúrgicos en Valencia, Carabobo. Visítanos o haz tu cotización digital.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Interactive Quote Form (WhatsApp Integrator) -->
+  <section id="cotizar" class="section-padding container reveal">
+    <div class="quote-box">
+      <div class="quote-grid">
+        
+        <div class="quote-info">
+          <h2>Cotiza tus Materiales <span>en Tiempo Récord</span></h2>
+          <p>Selecciona los materiales que necesitas para tu obra, ingresa tus datos y nuestro sistema generará una solicitud formal directa a nuestro WhatsApp de atención.</p>
+          
+          <ul class="quote-features-list">
+            <li class="quote-feat-row"><span class="quote-feat-dot"></span> Respuesta promedio en 15 minutos</li>
+            <li class="quote-feat-row"><span class="quote-feat-dot"></span> Desglose formal de precios en USD</li>
+            <li class="quote-feat-row"><span class="quote-feat-dot"></span> Coordinación de flete el mismo día</li>
+          </ul>
+        </div>
+
+        <div class="quote-form-container">
+          <form id="whatsapp-cotizador-form" onsubmit="sendQuoteToWhatsApp(event)">
+            
+            <div class="form-group">
+              <label class="form-label">Nombre del Solicitante</label>
+              <input type="text" id="form-name" class="form-input" placeholder="Ej: Ing. Carlos Mendoza" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Obra o Empresa</label>
+              <input type="text" id="form-company" class="form-input" placeholder="Ej: Constructora Central C.A.">
+            </div>
+
+            <div class="form-label" style="margin-bottom: 8px;">Materiales Requeridos</div>
+            <div class="material-selector-grid">
+              <div class="material-opt" onclick="toggleMaterial(this, 'Cabillas de Refuerzo')">
+                <span>Cabillas</span>
+                <span class="material-opt-checkbox"></span>
+              </div>
+              <div class="material-opt" onclick="toggleMaterial(this, 'Vigas e IPN')">
+                <span>Vigas / IPN</span>
+                <span class="material-opt-checkbox"></span>
+              </div>
+              <div class="material-opt" onclick="toggleMaterial(this, 'Hierro y Planchas')">
+                <span>Hierro / Planchas</span>
+                <span class="material-opt-checkbox"></span>
+              </div>
+              <div class="material-opt" onclick="toggleMaterial(this, 'Cemento Portland')">
+                <span>Cemento</span>
+                <span class="material-opt-checkbox"></span>
+              </div>
+              <div class="material-opt" onclick="toggleMaterial(this, 'Tuberías de Acero')">
+                <span>Tuberías</span>
+                <span class="material-opt-checkbox"></span>
+              </div>
+              <div class="material-opt" onclick="toggleMaterial(this, 'Mallas Trucson')">
+                <span>Mallas Trucson</span>
+                <span class="material-opt-checkbox"></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Detalles Adicionales (Medidas, cantidades...)</label>
+              <textarea id="form-details" class="form-input" rows="3" placeholder="Ej: Necesito 200 cabillas de 1/2 y 15 vigas IPN de 120 de 6 metros..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; border: none;">
+              <span>Enviar Cotización a WhatsApp</span>
+              <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Client Testimonials Commitment -->
+  <section class="section-padding bg-dark container reveal" style="border-radius:24px; padding:60px; margin-bottom:100px; background-color: var(--bg-card);">
+    <div class="section-header">
+      <h2>Sólido <span>Respaldo Profesional</span></h2>
+      <p>Lo que dicen ingenieros, maestros de obra y empresas metalúrgicas que confían en nuestro suministro de acero.</p>
+    </div>
+
+    <div class="testi-carousel">
+      
+      <!-- Card 1 -->
+      <div class="testi-card">
+        <span class="testi-quote-icon">“</span>
+        <div class="testi-rating">★★★★★</div>
+        <p class="testi-content">Excelente servicio y cobertura a nivel nacional. Solicitamos un despacho de vigas IPN de gran tonelaje para nuestra obra y la entrega se coordinó en tiempo récord directo en sitio. Calidad certificada.</p>
+        <div class="testi-user">
+          <div class="testi-avatar">RM</div>
+          <div class="testi-details">
+            <h4>Ing. Ricardo Mendoza</h4>
+            <p>Gerente de Proyectos Civiles • Valencia</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="testi-card">
+        <span class="testi-quote-icon">“</span>
+        <div class="testi-rating">★★★★★</div>
+        <p class="testi-content">Son nuestros proveedores exclusivos de cabillas y mallas electrosoldadas. Lo que más valoramos es la honestidad en el pesaje, la rapidez de respuesta por WhatsApp y los excelentes precios por lote mayorista.</p>
+        <div class="testi-user">
+          <div class="testi-avatar">AG</div>
+          <div class="testi-details">
+            <h4>Arq. Gabriela Gómez</h4>
+            <p>Directora de Desarrollos Residenciales</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="testi-card">
+        <span class="testi-quote-icon">“</span>
+        <div class="testi-rating">★★★★★</div>
+        <p class="testi-content">Compramos tubos estructurales y perfiles Conduven al mayor para la fabricación de portones industriales. El acero viene limpio, sin óxido y cortado con precisión. La atención del equipo por WhatsApp es excelente.</p>
+        <div class="testi-user">
+          <div class="testi-avatar">CP</div>
+          <div class="testi-details">
+            <h4>Ing. Carlos Peralta</h4>
+            <p>Director General • Metalmecánica Guacara C.A.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="testi-card">
+        <span class="testi-quote-icon">“</span>
+        <div class="testi-rating">★★★★★</div>
+        <p class="testi-content">Llevo 12 años como maestro de obra en San Diego y Naguanagua. La cabilla corrugada que nos despacha Construacero Carabobo tiene la mejor ductilidad para el doblado y armado de cimientos estructurales. Suministro garantizado.</p>
+        <div class="testi-user">
+          <div class="testi-avatar">JR</div>
+          <div class="testi-details">
+            <h4>Mro. José Gregorio Rivas</h4>
+            <p>Maestro de Obra y Enfierrador Principal</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      
+      <!-- Column 1 -->
+      <div class="footer-column">
+        <a href="#" class="logo" style="display:flex;align-items:center;gap:10px;">
+          <img src="assets/logo.png" alt="Construacero Logo" style="height:36px;width:auto;object-fit:contain;border-radius:6px;">
+          Construacero<span>Carabobo</span>
+        </a>
+        <p class="footer-desc">Proveedores siderúrgicos líderes de acero, cabillas, vigas y perfiles estructurales de máxima calidad y resistencia en la Región Central.</p>
+        <div class="social-links">
+          <a href="https://www.instagram.com/construacerocarabobo/" target="_blank" class="social-btn" aria-label="Instagram">
+            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6A3.6 3.6 0 0 0 16.4 4H7.6m8.4 2.25a.75.75 0 0 1 .75.75.75.75 0 0 1-.75.75.75.75 0 0 1-.75-.75.75.75 0 0 1 .75-.75M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Column 2 -->
+      <div class="footer-column">
+        <h3>Enlaces Rápidos</h3>
+        <ul class="footer-links">
+          <li><a href="#">Inicio</a></li>
+          <li><a href="#productos">Materiales Suministrados</a></li>
+          <li><a href="#nosotros">Sobre Nosotros</a></li>
+          <li><a href="#catalogo">Galería en Vivo</a></li>
+          <li><a href="#cotizar">Cotización Express</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3 -->
+      <div class="footer-column">
+        <h3>Contacto Directo</h3>
+        <ul class="contact-info-list">
+          <li class="contact-info-item">
+            <span class="contact-info-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;display:inline-block;">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+            </span>
+            <span><strong>Ubicación:</strong> Zona Industrial Aeropuerto, al frente del supermercado Hiperlider, Vía Flor Amarillo. Valencia, Edo. Carabobo, Venezuela.</span>
+          </li>
+          <li class="contact-info-item">
+            <span class="contact-info-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;display:inline-block;">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+              </svg>
+            </span>
+            <span>
+              <strong>WhatsApp de Ventas:</strong><br>
+              📞 <a href="https://wa.me/584244594724" target="_blank" style="color:var(--accent);font-weight:700;">0424-459-4724</a><br>
+              📞 <a href="https://wa.me/584244556736" target="_blank" style="color:var(--accent);font-weight:700;">0424-455-6736</a><br>
+              📞 <a href="https://wa.me/584124416005" target="_blank" style="color:var(--accent);font-weight:700;">0412-441-6005</a><br>
+              📞 <a href="https://wa.me/584144805129" target="_blank" style="color:var(--accent);font-weight:700;">0414-480-5129</a>
+            </span>
+          </li>
+          <li class="contact-info-item">
+            <span class="contact-info-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;display:inline-block;">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+            </span>
+            <span><strong>Email:</strong> <a href="mailto:j501159130@gmail.com" style="color:var(--text-muted);transition:var(--transition-smooth);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">j501159130@gmail.com</a></span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Copyright Bar -->
+    <div class="container copyright">
+      <p>&copy; 2026 Construacero Carabobo. Todos los derechos reservados.</p>
+      <p style="display:flex;align-items:center;gap:6px;">
+        <span style="color:#ff3b30">❤</span> Hecho para el sector metalúrgico de Venezuela.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts: Intersection Observer, Counter, WhatsApp Logic -->
+  <script>
+    // Header shadow on scroll
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('site-header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Reveal Animations & Counter via Intersection Observer
+    const revealElements = document.querySelectorAll('.reveal');
+    
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          
+          // If this contains numbers, trigger counter
+          const counterNums = entry.target.querySelectorAll('.stats-num');
+          counterNums.forEach(num => {
+            if (!num.classList.contains('counted')) {
+              num.classList.add('counted');
+              animateCounter(num);
+            }
+          });
+          
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.15
+    });
+
+    revealElements.forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // Stats counter animation
+    function animateCounter(el) {
+      const targetVal = parseInt(el.getAttribute('data-val'));
+      let currentVal = 0;
+      const duration = 1800; // milliseconds
+      const stepTime = Math.max(Math.floor(duration / targetVal), 15);
+      
+      const timer = setInterval(() => {
+        if (targetVal < 200) {
+          currentVal += 1;
+        } else {
+          currentVal += Math.ceil(targetVal / 100);
+        }
+        
+        if (currentVal >= targetVal) {
+          el.innerText = targetVal.toLocaleString('es-ES') + (targetVal === 100 ? '%' : '+');
+          clearInterval(timer);
+        } else {
+          el.innerText = currentVal.toLocaleString('es-ES') + '+';
+        }
+      }, stepTime);
+    }
+
+    // Material selector list for form
+    const selectedMaterials = new Set();
+    
+    function toggleMaterial(element, name) {
+      element.classList.toggle('selected');
+      if (selectedMaterials.has(name)) {
+        selectedMaterials.delete(name);
+      } else {
+        selectedMaterials.add(name);
+      }
+    }
+
+    // Send Form data to WhatsApp
+    function sendQuoteToWhatsApp(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('form-name').value.trim();
+      const company = document.getElementById('form-company').value.trim() || 'Particular';
+      const details = document.getElementById('form-details').value.trim();
+      
+      if (selectedMaterials.size === 0) {
+        alert('Por favor selecciona al menos un tipo de material para tu cotización.');
+        return;
+      }
+
+      const materialsList = Array.from(selectedMaterials).join(', ');
+      
+      // Construct beautiful text
+      let text = `*SOLICITUD DE COTIZACIÓN - CONSTRUACERO CARABOBO*\n\n`;
+      text += `👤 *Cliente:* ${name}\n`;
+      text += `🏢 *Obra/Empresa:* ${company}\n\n`;
+      text += `📦 *Materiales seleccionados:*\n_${materialsList}_\n\n`;
+      text += `📝 *Detalles de la solicitud:*\n${details}\n\n`;
+      text += `⚙️ _Enviado desde el autocotizador web oficial._`;
+      
+      const encodedText = encodeURIComponent(text);
+      // Hardcoded WhatsApp number - set to primary 0424-459-4724
+      const whatsappNumber = '584244594724'; 
+      const url = `https://wa.me/${whatsappNumber}?text=${encodedText}`;
+      
+      window.open(url, '_blank');
+    }
+
+    // Auto active navigation link active style based on scroll position
+    const navAnchors = document.querySelectorAll('.nav-links a');
+    const sections = document.querySelectorAll('section');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (window.scrollY >= (sectionTop - 200)) {
+          current = section.getAttribute('id') || '';
+        }
+      });
+
+      navAnchors.forEach(a => {
+        a.classList.remove('active');
+        if (a.getAttribute('href') === `#${current}` || (current === '' && a.getAttribute('href') === '#')) {
+          a.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

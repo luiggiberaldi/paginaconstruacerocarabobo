@@ -1,65 +1,111 @@
-import { ArrowRight } from 'lucide-react';
-
 export function Hero() {
   return (
-    <>
-      <div className="relative bg-gray-900 overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            className="w-full h-full object-cover opacity-30"
-            src="https://images.unsplash.com/photo-1541888086425-d81bb19240f5?q=80&w=2000&auto=format&fit=crop"
-            alt="Construcción"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900 to-transparent mix-blend-multiply" />
-        </div>
-        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl max-w-2xl leading-tight">
-            Acero y Materiales para tus Obras al Instante.
-          </h1>
-          <p className="mt-6 text-xl text-gray-300 max-w-2xl font-light">
-            Surtimos tu obra con rapidez y calidad. Elabora tu lista de requirimentos online y nuestro equipo comercial optimizará tu cotización con despacho a nivel nacional.
-          </p>
-          <div className="mt-10 flex gap-4">
-            <a
-              href="#catalogo"
-              className="inline-flex items-center px-8 py-3.5 border border-transparent text-base font-semibold rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-500 hover:scale-105 transition-all outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+    <section className="hero">
+      <div className="container hero-grid">
+        
+        {/* Text Hero Column */}
+        <div className="hero-content">
+          <h2>
+            <svg 
+              style={{ width: '16px', height: '16px', stroke: 'currentColor', fill: 'none', strokeWidth: 2.5, verticalAlign: 'middle', marginRight: '8px', display: 'inline-block' }} 
+              viewBox="0 0 24 24"
             >
-              Iniciar Cotización
-              <ArrowRight className="ml-2 -mr-1 h-5 w-5" />
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            Distribución de Acero e Hierro
+          </h2>
+          <h1>Suministramos el Acero que Soporta tus Grandes Ideas</h1>
+          <p>Distribución mayorista y detal de cabillas, vigas, perfiles de hierro, cemento y materiales de construcción con envíos directos a todo el país.</p>
+          <div className="hero-ctas">
+            <a href="?cotizar=true" target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+              <span>Cotizar Materiales</span>
+              <svg style={{ width: '20px', height: '20px', fill: 'currentColor' }} viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+              </svg>
             </a>
-            <a
-              href="#contacto"
-              className="inline-flex items-center px-8 py-3.5 border border-gray-300 text-base font-semibold rounded-md shadow-sm text-white bg-transparent hover:bg-white/10 transition-all"
-            >
-              Hablar con un Asesor
-            </a>
+            <a href="#productos" className="btn btn-secondary">Ver Catálogo</a>
           </div>
         </div>
-      </div>
 
-      {/* Trust Indicators Section */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:py-10 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 divide-x divide-gray-100 text-center">
-            <div className="px-4">
-              <p className="text-3xl font-extrabold text-orange-600">+15</p>
-              <p className="mt-1 text-sm font-medium text-gray-600 uppercase tracking-wide">Años de Exp.</p>
+        {/* Instagram Premium Card Column */}
+        <div className="instagram-card">
+          
+          {/* IG Card Header */}
+          <div className="ig-header-top">
+            <div className="ig-avatar-wrapper">
+              <div className="ig-avatar-ring"></div>
+              <img className="ig-avatar" src="/assets/instagram/profile.jpg" alt="Construacero Carabobo" />
+              <span className="ig-badge-live">ACTIVO</span>
             </div>
-            <div className="px-4">
-              <p className="text-3xl font-extrabold text-orange-600">Stock</p>
-              <p className="mt-1 text-sm font-medium text-gray-600 uppercase tracking-wide">Inmediato</p>
-            </div>
-            <div className="px-4">
-              <p className="text-3xl font-extrabold text-orange-600">Nacional</p>
-              <p className="mt-1 text-sm font-medium text-gray-600 uppercase tracking-wide">Envíos Seguros</p>
-            </div>
-            <div className="px-4">
-              <p className="text-3xl font-extrabold text-orange-600">Calidad</p>
-              <p className="mt-1 text-sm font-medium text-gray-600 uppercase tracking-wide">Garantizada</p>
+            
+            <div className="ig-meta-stats">
+              <div>
+                <div className="ig-stat-val">133</div>
+                <div className="ig-stat-lbl">Posts</div>
+              </div>
+              <div>
+                <div className="ig-stat-val">9,447</div>
+                <div className="ig-stat-lbl">Seguidores</div>
+              </div>
+              <div>
+                <div className="ig-stat-val">1,560</div>
+                <div className="ig-stat-lbl">Seguidos</div>
+              </div>
             </div>
           </div>
+
+          {/* Username, Badge, Bio */}
+          <div className="ig-profile-info">
+            <div className="ig-handle-row">
+              <span className="ig-username">construacerocarabobo</span>
+              <span className="ig-verified-badge">
+                <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: '18px', height: '18px', color: 'var(--steel-blue)' }}>
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                </svg>
+              </span>
+            </div>
+            <div className="ig-category">Ferretería Industrial • Suministros Sólidos</div>
+            <div className="ig-bio">
+              <span className="ig-bio-strong">Construacero Carabobo</span>
+              🏢 Suministros siderúrgicos de alta resistencia.<br />
+              🏗️ Cabillas, Vigas, Láminas y Perfiles a nivel nacional.<br />
+              📦 Venta al Mayor y Detal para obras civiles.
+            </div>
+          </div>
+
+          {/* Follow CTA Row */}
+          <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
+            <a 
+              href="https://www.instagram.com/construacerocarabobo/" 
+              target="_blank" 
+              rel="noreferrer"
+              style={{ flex: 1, backgroundColor: 'var(--accent)', color: 'white', textAlign: 'center', padding: '10px', borderRadius: '10px', fontWeight: 700, fontSize: '0.85rem', boxShadow: '0 4px 10px rgba(249,115,22,0.2)' }}
+            >
+              Seguir Perfil
+            </a>
+            <a 
+              href="?cotizar=true" 
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', textAlign: 'center', padding: '10px', borderRadius: '10px', fontWeight: 700, fontSize: '0.85rem' }}
+            >
+              Enviar Mensaje
+            </a>
+          </div>
+
+          {/* Mini Grid of Scraped Photos */}
+          <div className="ig-mini-grid">
+            <a href="#catalogo" className="ig-mini-photo"><img src="/assets/instagram/post-1.jpg" alt="Post 1" /></a>
+            <a href="#catalogo" className="ig-mini-photo"><img src="/assets/instagram/post-2.jpg" alt="Post 2" /></a>
+            <a href="#catalogo" className="ig-mini-photo"><img src="/assets/instagram/post-3.jpg" alt="Post 3" /></a>
+            <a href="#catalogo" className="ig-mini-photo"><img src="/assets/instagram/post-4.jpg" alt="Post 4" /></a>
+            <a href="#catalogo" className="ig-mini-photo"><img src="/assets/instagram/post-5.jpg" alt="Post 5" /></a>
+            <a href="#catalogo" className="ig-mini-photo"><img src="/assets/instagram/post-6.jpg" alt="Post 6" /></a>
+          </div>
+
         </div>
+
       </div>
-    </>
+    </section>
   );
 }

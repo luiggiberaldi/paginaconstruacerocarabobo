@@ -6,3 +6,12 @@ coverage/
 *.log
 .env*
 !.env.example
+listo-pos/
+listo-pos-cotizaciones/
+**/listo-pos*
+**/listo-pos*/**
+check_db_with_service_key.ts
+scratch/check_db_with_service_key.ts
+
+
+

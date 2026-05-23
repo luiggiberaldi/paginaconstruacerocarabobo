@@ -1,0 +1,71 @@
+{
+  "name": "Construacero Carabobo",
+  "short_name": "Construacero",
+  "description": "Distribuidor líder de acero, cabillas, vigas, cemento y materiales de construcción en Carabobo. Calidad industrial para tus obras civiles y metalúrgicas.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0c0e12",
+  "theme_color": "#f97316",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "es",
+  "categories": ["shopping", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192x192-safe.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/badge.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Autocotizador Construacero en PC"
+    },
+    {
+      "src": "/screenshots/mobile-narrow.png",
+      "sizes": "375x812",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Autocotizador Construacero en Celular"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Cotizar Materiales",
+      "short_name": "Cotizar",
+      "description": "Abre el autocotizador en tiempo real para cotizar materiales siderúrgicos.",
+      "url": "/#cotizar",
+      "icons": [{ "src": "/shortcuts/start.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Ver Materiales",
+      "short_name": "Materiales",
+      "description": "Explora nuestro catálogo de vigas, cabillas y perfiles en stock.",
+      "url": "/#productos",
+      "icons": [{ "src": "/shortcuts/settings.png", "sizes": "96x96" }]
+    }
+  ]
+}
