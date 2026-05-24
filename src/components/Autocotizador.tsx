@@ -198,18 +198,19 @@ export function Autocotizador() {
     fetchInventory();
   }, []);
 
-  // Count items per category
+  // Count items per category (grouped by user-facing label)
   const categoryCounts = useMemo(() => {
     const counts: { [key: string]: number } = {};
     products.forEach(p => {
-      counts[p.categoria] = (counts[p.categoria] || 0) + 1;
+      const label = getCategoryLabel(p.categoria);
+      counts[label] = (counts[label] || 0) + 1;
     });
     return counts;
   }, [products]);
 
-  // Compute Categories dynamically sorted by item volume descending
+  // Compute unique labeled Categories dynamically sorted by item volume descending
   const categories = useMemo(() => {
-    const cats = new Set(products.map(p => p.categoria));
+    const cats = new Set(products.map(p => getCategoryLabel(p.categoria)));
     return Array.from(cats).sort((a, b) => (categoryCounts[b] || 0) - (categoryCounts[a] || 0));
   }, [products, categoryCounts]);
 
@@ -218,7 +219,7 @@ export function Autocotizador() {
     const term = normalizeText(categorySearchTerm);
     if (!term) return categories;
     return categories.filter(cat => 
-      normalizeText(getCategoryLabel(cat)).includes(term)
+      normalizeText(cat).includes(term)
     );
   }, [categories, categorySearchTerm]);
 
@@ -278,7 +279,7 @@ export function Autocotizador() {
     const rawTerm = searchTerm.trim();
     if (!rawTerm) {
       return products.filter(product => 
-        selectedCategory ? product.categoria === selectedCategory : true
+        selectedCategory ? getCategoryLabel(product.categoria) === selectedCategory : true
       );
     }
 
@@ -292,7 +293,7 @@ export function Autocotizador() {
 
     if (normalizedTokens.length === 0) {
       return products.filter(product => 
-        selectedCategory ? product.categoria === selectedCategory : true
+        selectedCategory ? getCategoryLabel(product.categoria) === selectedCategory : true
       );
     }
 
@@ -314,7 +315,7 @@ export function Autocotizador() {
         return false;
       });
 
-      const matchesCategory = selectedCategory ? product.categoria === selectedCategory : true;
+      const matchesCategory = selectedCategory ? getCategoryLabel(product.categoria) === selectedCategory : true;
       return matchesSearch && matchesCategory;
     });
   }, [products, searchTerm, selectedCategory]);
@@ -560,11 +561,11 @@ export function Autocotizador() {
                     className={`category-filter-item ${selectedCategory === cat ? 'active' : ''}`}
                     onClick={() => setSelectedCategory(cat)}
                   >
-                    <span className="category-filter-item-name" title={getCategoryLabel(cat)}>
+                    <span className="category-filter-item-name" title={cat}>
                       <svg style={{ width: '12px', height: '12px', fill: 'currentColor', opacity: 0.6 }} viewBox="0 0 24 24">
                         <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
                       </svg>
-                      {getCategoryLabel(cat)}
+                      {cat}
                     </span>
                     <span className="category-item-count">{categoryCounts[cat] || 0}</span>
                   </button>
