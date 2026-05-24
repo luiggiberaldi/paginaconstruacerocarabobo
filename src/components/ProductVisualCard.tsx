@@ -29,8 +29,19 @@ export function ProductVisualCard({
   const specs = getProductSpecs(product);
   const specsArray = Object.entries(specs).slice(0, 2); // Show first 2 attributes
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('button') || target.closest('input') || target.closest('.card-action-container')) {
+      return;
+    }
+    onShowSpecs(product);
+  };
+
   return (
-    <article className={`product-visual-card ${isSelected ? 'selected' : ''}`}>
+    <article 
+      className={`product-visual-card ${isSelected ? 'selected' : ''}`}
+      onClick={handleCardClick}
+    >
       {/* Image Thumbnail Header */}
       <div className="product-img-wrapper">
         <img

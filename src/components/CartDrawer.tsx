@@ -165,8 +165,12 @@ export function CartDrawer({
 
           {/* Checkout Details Form */}
           <form className="checkout-details-form" onSubmit={onSendQuote}>
-            <div className="sidebar-title" style={{ paddingBottom: '8px', marginBottom: '4px' }}>
-              👤 Información de Despacho
+            <div className="sidebar-title" style={{ paddingBottom: '8px', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <svg style={{ width: '15px', height: '15px', fill: 'none', stroke: 'currentColor', strokeWidth: 2.5, opacity: 0.8 }} viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              Información de Despacho
             </div>
 
             <div className="form-group" style={{ marginBottom: '10px' }}>

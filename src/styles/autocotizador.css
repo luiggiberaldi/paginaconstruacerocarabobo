@@ -266,6 +266,7 @@
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 .product-visual-card:hover {
@@ -284,6 +285,7 @@
 .product-img-wrapper {
   width: 100%;
   height: 170px;
+  aspect-ratio: 16 / 10;
   background-color: #0c0e12;
   position: relative;
   overflow: hidden;
@@ -1354,5 +1356,95 @@
 .cart-drawer-container .checkout-details-form {
   margin-top: 16px;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   UI/UX PRO MAX: SKELETON PULSE LOADER & TOUCH TARGETS
+   ───────────────────────────────────────────────────────────── */
+
+/* Skeleton Pulse Loading State */
+.catalog-skeleton-card {
+  background-color: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  height: 380px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 16px;
+}
+
+.catalog-skeleton-card::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 150px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+}
+
+.catalog-skeleton-card::after {
+  content: '';
+  display: block;
+  flex: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.03) 15%,
+    transparent 15%,
+    transparent 25%,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.03) 35%,
+    transparent 35%,
+    transparent 55%,
+    rgba(255, 255, 255, 0.03) 55%,
+    rgba(255, 255, 255, 0.03) 70%,
+    transparent 70%
+  );
+}
+
+.catalog-skeleton-card,
+.catalog-skeleton-card::before,
+.catalog-skeleton-card::after {
+  animation: skeleton-pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+/* Touch Target Optimization (WCAG 44x44px for small mobile buttons) */
+@media (max-width: 576px) {
+  .pagination-btn.num,
+  .cart-drawer-close-btn,
+  .specs-modal-close {
+    position: relative;
+  }
+  
+  .pagination-btn.num::after,
+  .cart-drawer-close-btn::after,
+  .specs-modal-close::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+    min-width: 44px;
+    min-height: 44px;
+    z-index: 10;
+  }
+}
+
 
 
