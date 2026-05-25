@@ -261,9 +261,25 @@ export function Autocotizador() {
 
   // Adjust product quantity directly via input field
   const handleInputChange = (productId: string, value: string, maxStock: number) => {
+    if (value === '') {
+      setSelectedItems(prev => ({ ...prev, [productId]: '' as any }));
+      return;
+    }
     const parsed = parseInt(value, 10);
-    const validQty = isNaN(parsed) ? 1 : Math.max(1, Math.min(parsed, maxStock));
+    if (isNaN(parsed)) return;
+    const validQty = Math.max(0, Math.min(parsed, maxStock));
     setSelectedItems(prev => ({ ...prev, [productId]: validQty }));
+  };
+
+  // Safe blur handler to ensure quantities never remain empty or zero
+  const handleInputBlur = (productId: string) => {
+    setSelectedItems(prev => {
+      const current = prev[productId];
+      if (current === '' as any || current === 0 || isNaN(Number(current))) {
+        return { ...prev, [productId]: 1 };
+      }
+      return prev;
+    });
   };
 
   // Remove specific product from cart
@@ -294,6 +310,11 @@ export function Autocotizador() {
     const prod = products.find(p => p.id === productId) || fallbackProducts.find(p => p.id === productId);
     const maxStock = prod ? prod.stock_actual : 9999;
     handleInputChange(productId, value, maxStock);
+  };
+
+  // Safe blur handler from cart
+  const handleCartInputBlur = (productId: string) => {
+    handleInputBlur(productId);
   };
 
   // Filter products reactive logic (optimized for Venezuelan market)
@@ -500,6 +521,7 @@ export function Autocotizador() {
     onCheckout: () => setIsCheckoutOpen(true),
     onAdjustQuantity: handleCartAdjustQuantity,
     onInputChange: handleCartInputChange,
+    onInputBlur: handleCartInputBlur,
   };
 
   return (
@@ -736,6 +758,7 @@ export function Autocotizador() {
                         onRemove={handleRemoveFromCart}
                         onAdjustQuantity={handleAdjustQuantity}
                         onInputChange={handleInputChange}
+                        onBlur={handleInputBlur}
                         onShowSpecs={setSelectedSpecProduct}
                       />
                     );

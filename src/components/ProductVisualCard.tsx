@@ -10,6 +10,7 @@ interface ProductVisualCardProps {
   onRemove: (productId: string) => void;
   onAdjustQuantity: (productId: string, amount: number, maxStock: number) => void;
   onInputChange: (productId: string, value: string, maxStock: number) => void;
+  onBlur: (productId: string) => void;
   onShowSpecs: (product: DbProduct) => void;
 }
 
@@ -23,6 +24,7 @@ export function ProductVisualCard({
   onRemove,
   onAdjustQuantity,
   onInputChange,
+  onBlur,
   onShowSpecs,
 }: ProductVisualCardProps) {
   // Read specs for dynamic technical badges on the card
@@ -145,6 +147,8 @@ export function ProductVisualCard({
                 className="product-qty-value"
                 value={currentQty}
                 onChange={(e) => onInputChange(product.id, e.target.value, product.stock_actual)}
+                onBlur={() => onBlur(product.id)}
+                onFocus={(e) => e.target.select()}
               />
               <button
                 type="button"

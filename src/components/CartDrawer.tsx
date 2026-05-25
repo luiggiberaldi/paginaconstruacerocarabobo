@@ -25,6 +25,7 @@ interface CartDrawerProps {
   onCheckout: () => void;
   onAdjustQuantity: (productId: string, amount: number) => void;
   onInputChange: (productId: string, value: string) => void;
+  onInputBlur: (productId: string) => void;
 }
 
 export function CartDrawer({
@@ -51,6 +52,7 @@ export function CartDrawer({
   onCheckout,
   onAdjustQuantity,
   onInputChange,
+  onInputBlur,
 }: CartDrawerProps) {
   const totalSelectedCount = Object.keys(selectedItems).length;
 
@@ -179,6 +181,8 @@ export function CartDrawer({
                         className="cart-qty-value"
                         value={qty}
                         onChange={(e) => onInputChange(prod.id, e.target.value)}
+                        onBlur={() => onInputBlur(prod.id)}
+                        onFocus={(e) => e.target.select()}
                       />
                       <button
                         type="button"
