@@ -190,8 +190,9 @@ export function CheckoutModal({
               </span>
             </div>
 
-            <div className="checkout-rates-info" style={{ marginTop: '6px', fontSize: '0.7rem' }}>
-              Tasa BCV oficial: <strong>{tasaBcv.precio.toFixed(2)} Bs/$</strong>
+            <div className="checkout-rates-info" style={{ marginTop: '6px', fontSize: '0.65rem', lineHeight: '1.3', textAlign: 'center' }}>
+              Tasa BCV de Referencia: <strong>{tasaBcv.precio.toFixed(2)} Bs/$</strong><br />
+              <span style={{ color: 'var(--accent)', fontWeight: '600' }}>Los precios son referenciales y aproximados, sujetos a cambio sin previo aviso.</span>
             </div>
           </div>
 

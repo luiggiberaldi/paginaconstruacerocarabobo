@@ -479,13 +479,14 @@ export function Autocotizador() {
     text += `Ciudad: ${clientCity.trim()}\n`;
     text += `Dirección: ${clientAddress.trim()}\n\n`;
     text += `*Materiales Solicitados:*\n${itemsSummary}\n\n`;
-    text += `*TOTAL ESTIMADO:*\n`;
+    text += `*TOTAL ESTIMADO (REFERENCIAL):*\n`;
     text += `Total USD (tasa BCV): $${totalUsd.toFixed(2)}\n`;
     text += `Equivalente en Bolívares: Bs. ${totalVes.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n`;
-    text += `Tasa BCV de Referencia: ${tasaBcv.precio.toFixed(2)} Bs/$\n`;
+    text += `Tasa BCV de Referencia: ${tasaBcv.precio.toFixed(2)} Bs/$\n\n`;
+    text += `Nota: Los precios mostrados son aproximados y de carácter referencial, sujetos a cambio sin previo aviso y a la disponibilidad física en el patio.`;
 
     if (!isOnline) {
-      text += `\n[Nota: Cotización realizada en modo sin conexión - Guardada localmente]\n`;
+      text += `\n\n[Nota: Cotización realizada en modo sin conexión - Guardada localmente]\n`;
     }
 
     try {

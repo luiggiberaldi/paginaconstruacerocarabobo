@@ -233,8 +233,9 @@ export function CartDrawer({
                 </span>
               </div>
 
-              <div className="checkout-rates-info">
-                Tasa BCV oficial: <strong>{tasaBcv.precio.toFixed(2)} Bs/$</strong>
+              <div className="checkout-rates-info" style={{ fontSize: '0.62rem', marginTop: '6px', color: 'var(--text-muted)', lineHeight: '1.3' }}>
+                Tasa BCV de Referencia: <strong>{tasaBcv.precio.toFixed(2)} Bs/$</strong><br />
+                <span style={{ color: 'var(--accent)', fontWeight: '600' }}>Los precios son referenciales y aproximados, sujetos a cambio sin previo aviso.</span>
               </div>
             </div>
 
