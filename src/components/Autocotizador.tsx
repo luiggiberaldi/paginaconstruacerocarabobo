@@ -113,6 +113,8 @@ export function Autocotizador() {
   const [clientCedula, setClientCedula] = useState(() => localStorage.getItem('construacero_client_cedula') || '');
   const [clientPhone, setClientPhone] = useState(() => localStorage.getItem('construacero_client_phone') || '');
   const [clientAddress, setClientAddress] = useState(() => localStorage.getItem('construacero_client_address') || '');
+  const [clientState, setClientState] = useState(() => localStorage.getItem('construacero_client_state') || '');
+  const [clientCity, setClientCity] = useState(() => localStorage.getItem('construacero_client_city') || '');
   
   // Selection State: { [productId]: quantity } - Persisted in localStorage
   const [selectedItems, setSelectedItems] = useState<{ [key: string]: number }>(() => {
@@ -156,7 +158,9 @@ export function Autocotizador() {
     localStorage.setItem('construacero_client_cedula', clientCedula);
     localStorage.setItem('construacero_client_phone', clientPhone);
     localStorage.setItem('construacero_client_address', clientAddress);
-  }, [clientName, clientCedula, clientPhone, clientAddress]);
+    localStorage.setItem('construacero_client_state', clientState);
+    localStorage.setItem('construacero_client_city', clientCity);
+  }, [clientName, clientCedula, clientPhone, clientAddress, clientState, clientCity]);
 
   // Save Cart Items to localStorage
   useEffect(() => {
@@ -443,6 +447,8 @@ export function Autocotizador() {
       clientName.trim() === '' || 
       clientCedula.trim() === '' || 
       clientPhone.trim() === '' || 
+      clientState.trim() === '' ||
+      clientCity.trim() === '' ||
       clientAddress.trim() === '' ||
       !isCedulaValid(clientCedula) ||
       !isPhoneValid(clientPhone)
@@ -469,6 +475,8 @@ export function Autocotizador() {
     text += `Cliente: ${clientName.trim()}\n`;
     text += `Cédula / RIF: ${clientCedula.trim()}\n`;
     text += `Teléfono: ${clientPhone.trim()}\n`;
+    text += `Estado: ${clientState.trim()}\n`;
+    text += `Ciudad: ${clientCity.trim()}\n`;
     text += `Dirección: ${clientAddress.trim()}\n\n`;
     text += `*Materiales Solicitados:*\n${itemsSummary}\n\n`;
     text += `*TOTAL ESTIMADO:*\n`;
@@ -851,6 +859,10 @@ export function Autocotizador() {
         setClientPhone={setClientPhone}
         clientAddress={clientAddress}
         setClientAddress={setClientAddress}
+        clientState={clientState}
+        setClientState={setClientState}
+        clientCity={clientCity}
+        setClientCity={setClientCity}
         totalUsd={totalUsd}
         totalVes={totalVes}
         tasaBcv={tasaBcv}

@@ -12,6 +12,10 @@ interface CheckoutModalProps {
   setClientPhone: (phone: string) => void;
   clientAddress: string;
   setClientAddress: (address: string) => void;
+  clientState: string;
+  setClientState: (state: string) => void;
+  clientCity: string;
+  setClientCity: (city: string) => void;
   totalUsd: number;
   totalVes: number;
   tasaBcv: any;
@@ -30,6 +34,10 @@ export function CheckoutModal({
   setClientPhone,
   clientAddress,
   setClientAddress,
+  clientState,
+  setClientState,
+  clientCity,
+  setClientCity,
   totalUsd,
   totalVes,
   tasaBcv,
@@ -43,6 +51,8 @@ export function CheckoutModal({
     clientName.trim() !== '' &&
     clientCedula.trim() !== '' &&
     clientPhone.trim() !== '' &&
+    clientState.trim() !== '' &&
+    clientCity.trim() !== '' &&
     clientAddress.trim() !== '' &&
     isCedulaValid(clientCedula) &&
     isPhoneValid(clientPhone);
@@ -127,6 +137,31 @@ export function CheckoutModal({
                 Teléfono inválido (mínimo 10 dígitos, Ej: 0412-1234567)
               </span>
             )}
+          </div>
+
+          <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
+            <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+              <label className="form-label">Estado</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="Ej: Carabobo"
+                value={clientState}
+                onChange={(e) => setClientState(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+              <label className="form-label">Ciudad</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="Ej: Valencia"
+                value={clientCity}
+                onChange={(e) => setClientCity(e.target.value)}
+                required
+              />
+            </div>
           </div>
 
           <div className="form-group" style={{ marginBottom: '16px' }}>
