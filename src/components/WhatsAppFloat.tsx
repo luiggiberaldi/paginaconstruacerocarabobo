@@ -1,7 +1,7 @@
 import { MessageCircle } from 'lucide-react';
 
 export function WhatsAppFloat() {
-  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '584244594724';
+  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '584124051793';
   
   return (
     <a

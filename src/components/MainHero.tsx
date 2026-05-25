@@ -1,5 +1,5 @@
 export function MainHero() {
-  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '584244594724';
+  const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '584124051793';
   const whatsappMessage = encodeURIComponent('¡Hola! Vengo de la página web y deseo solicitar un presupuesto para materiales siderúrgicos al mayor.');
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 

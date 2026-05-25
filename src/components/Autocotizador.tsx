@@ -494,7 +494,7 @@ export function Autocotizador() {
     }
 
     const encodedText = encodeURIComponent(text);
-    const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '584244594724';
+    const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '584124051793';
     const url = `https://wa.me/${whatsappNumber}?text=${encodedText}`;
     window.open(url, '_blank');
   };

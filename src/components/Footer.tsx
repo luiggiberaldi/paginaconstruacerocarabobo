@@ -84,7 +84,7 @@ export function Footer({ standalone = false }: FooterProps) {
               </span>
               <span>
                 <strong>WhatsApp de Ventas:</strong><br />
-                📞 <a href="https://wa.me/584244594724" target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', fontWeight: 700 }}>0424-459-4724</a> (Principal)<br />
+                📞 <a href="https://wa.me/584124051793" target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', fontWeight: 700 }}>0412-405-1793</a> (Principal)<br />
                 📞 <a href="https://wa.me/584244556736" target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', fontWeight: 700 }}>0424-455-6736</a><br />
                 📞 <a href="https://wa.me/584124416005" target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', fontWeight: 700 }}>0412-441-6005</a><br />
                 📞 <a href="https://wa.me/584144805129" target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', fontWeight: 700 }}>0414-480-5129</a>
