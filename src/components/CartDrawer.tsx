@@ -23,6 +23,7 @@ interface CartDrawerProps {
   totalVes: number;
   onSendQuote: (e: React.FormEvent) => void;
   onCheckout: () => void;
+  onAdjustQuantity: (productId: string, amount: number) => void;
 }
 
 export function CartDrawer({
@@ -47,6 +48,7 @@ export function CartDrawer({
   totalVes,
   onSendQuote,
   onCheckout,
+  onAdjustQuantity,
 }: CartDrawerProps) {
   const totalSelectedCount = Object.keys(selectedItems).length;
 
@@ -160,8 +162,29 @@ export function CartDrawer({
                     <h5 className="cart-item-title" title={prod.nombre}>
                       {prod.nombre}
                     </h5>
-                    <div className="cart-item-price-desc">
-                      {qty} {prod.unidad} x <strong>${priceUsdBcv.toFixed(2)}</strong>
+                    
+                    {/* Compact Interactive Quantity Selector */}
+                    <div className="cart-item-qty-container">
+                      <button
+                        type="button"
+                        className="cart-qty-btn-minus"
+                        onClick={() => onAdjustQuantity(prod.id, -1)}
+                      >
+                        -
+                      </button>
+                      <span className="cart-qty-value">
+                        {qty}
+                      </span>
+                      <button
+                        type="button"
+                        className="cart-qty-btn-plus"
+                        onClick={() => onAdjustQuantity(prod.id, 1)}
+                      >
+                        +
+                      </button>
+                      <span className="cart-qty-unit-label">
+                        {prod.unidad} x <strong>${priceUsdBcv.toFixed(2)}</strong>
+                      </span>
                     </div>
                   </div>
 
