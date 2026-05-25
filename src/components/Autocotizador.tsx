@@ -289,6 +289,13 @@ export function Autocotizador() {
     handleAdjustQuantity(productId, amount, maxStock);
   };
 
+  // Adjust product quantity directly from input in cart
+  const handleCartInputChange = (productId: string, value: string) => {
+    const prod = products.find(p => p.id === productId) || fallbackProducts.find(p => p.id === productId);
+    const maxStock = prod ? prod.stock_actual : 9999;
+    handleInputChange(productId, value, maxStock);
+  };
+
   // Filter products reactive logic (optimized for Venezuelan market)
   const filteredProducts = useMemo(() => {
     const rawTerm = searchTerm.trim();
@@ -492,6 +499,7 @@ export function Autocotizador() {
     onSendQuote: handleSendQuote,
     onCheckout: () => setIsCheckoutOpen(true),
     onAdjustQuantity: handleCartAdjustQuantity,
+    onInputChange: handleCartInputChange,
   };
 
   return (

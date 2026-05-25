@@ -24,6 +24,7 @@ interface CartDrawerProps {
   onSendQuote: (e: React.FormEvent) => void;
   onCheckout: () => void;
   onAdjustQuantity: (productId: string, amount: number) => void;
+  onInputChange: (productId: string, value: string) => void;
 }
 
 export function CartDrawer({
@@ -49,6 +50,7 @@ export function CartDrawer({
   onSendQuote,
   onCheckout,
   onAdjustQuantity,
+  onInputChange,
 }: CartDrawerProps) {
   const totalSelectedCount = Object.keys(selectedItems).length;
 
@@ -172,9 +174,12 @@ export function CartDrawer({
                       >
                         -
                       </button>
-                      <span className="cart-qty-value">
-                        {qty}
-                      </span>
+                      <input
+                        type="number"
+                        className="cart-qty-value"
+                        value={qty}
+                        onChange={(e) => onInputChange(prod.id, e.target.value)}
+                      />
                       <button
                         type="button"
                         className="cart-qty-btn-plus"
