@@ -462,26 +462,23 @@ export function Autocotizador() {
                      imagen_url: null,
                      activo: true
                    };
-      const precioUsdBcv  = prod.precio_usd * factor;
-      const precioVes     = prod.precio_usd * tasaBcv.tasaUsdt;
-      const subtotalUsd   = precioUsdBcv * Number(qty);
-      const subtotalVes   = precioVes * Number(qty);
-      return `- ${qty} x ${prod.nombre} (${prod.codigo})\n  Precio: $${precioUsdBcv.toFixed(2)} (≈ Bs. ${precioVes.toLocaleString('es-ES', { minimumFractionDigits: 2 })}) / ${prod.unidad}\n  Sub-total: $${subtotalUsd.toFixed(2)} (Bs. ${subtotalVes.toLocaleString('es-ES', { minimumFractionDigits: 2 })})`;
-    }).filter(s => s !== '').join('\n\n');
+      return `* ${qty} x ${prod.nombre} (${prod.codigo})`;
+    }).filter(s => s !== '').join('\n');
 
     let text = `*SOLICITUD DE COTIZACIÓN - CONSTRUACERO CARABOBO*\n\n`;
-    text += `👤 *Cliente:* ${clientName.trim()}\n`;
-    text += `🪪 *Cédula:* ${clientCedula.trim()}\n`;
-    text += `📞 *Teléfono:* ${clientPhone.trim()}\n`;
-    text += `📍 *Dirección:* ${clientAddress.trim()}\n\n`;
-    text += `📦 *Materiales Solicitados:*\n${itemsSummary}\n\n`;
-    text += `💰 *TOTAL ESTIMADO:*\n`;
-    text += `💵 *Total USD (tasa BCV):* $${totalUsd.toFixed(2)}\n`;
-    text += `🇻🇪 *Equivalente Bs.:* Bs. ${totalVes.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n`;
-    text += `📊 _Tasa BCV aplicada: ${tasaBcv.precio.toFixed(2)} Bs/$_\n\n`;
+    text += `Cliente: ${clientName.trim()}\n`;
+    text += `Cédula / RIF: ${clientCedula.trim()}\n`;
+    text += `Teléfono: ${clientPhone.trim()}\n`;
+    text += `Dirección: ${clientAddress.trim()}\n\n`;
+    text += `*Materiales Solicitados:*\n${itemsSummary}\n\n`;
+    text += `*TOTAL ESTIMADO:*\n`;
+    text += `Total USD (tasa BCV): $${totalUsd.toFixed(2)}\n`;
+    text += `Equivalente en Bolívares: Bs. ${totalVes.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\n`;
+    text += `Tasa BCV de Referencia: ${tasaBcv.precio.toFixed(2)} Bs/$\n`;
 
-    if (!isOnline) text += `⚠️ [COTIZACIÓN REALIZADA SIN INTERNET - TICKET GUARDADO LOCALMENTE]\n\n`;
-    text += `⚙️ _Generado desde la App Oficial de Construacero (Autocotizador 2.0 PWA)_`;
+    if (!isOnline) {
+      text += `\n[Nota: Cotización realizada en modo sin conexión - Guardada localmente]\n`;
+    }
 
     try {
       navigator.clipboard.writeText(text);
