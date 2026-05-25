@@ -332,6 +332,18 @@
 }
 
 /* Testimonials Section */
+.testimonials-section {
+  background-color: var(--bg-darker);
+}
+
+.testimonials-card {
+  background-color: var(--bg-card);
+  border-radius: 24px;
+  padding: 60px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
 .testi-carousel {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -473,5 +485,14 @@
 
   .testi-carousel {
     grid-template-columns: 1fr;
+  }
+
+  .testimonials-card {
+    padding: 40px 20px;
+    border-radius: 16px;
+  }
+
+  .about-img-wrapper img {
+    height: 320px;
   }
 }

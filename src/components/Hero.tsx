@@ -1,3 +1,5 @@
+import { navigateToCotizar } from './AutocotizadorHelpers';
+
 export function Hero() {
   return (
     <section className="hero">
@@ -12,18 +14,18 @@ export function Hero() {
             >
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             </svg>
-            Distribución de Acero e Hierro
+            CONEXIÓN SIDERÚRGICA DIRECTA
           </h2>
-          <h1>Suministramos el Acero que Soporta tus Grandes Ideas</h1>
-          <p>Distribución mayorista y detal de cabillas, vigas, perfiles de hierro, cemento y materiales de construcción con envíos directos a todo el país.</p>
+          <h1>Sigue Nuestro Despacho y Stock de Materiales en Vivo</h1>
+          <p>Publicamos el día a día directamente desde nuestro patio de carga en Carabobo. Mira la llegada de nuevos lotes de cabillas, vigas, perfiles de hierro y mallas de refuerzo antes de solicitar tu presupuesto.</p>
           <div className="hero-ctas">
-            <a href="?cotizar=true" target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+            <a href="?cotizar=true" onClick={navigateToCotizar} className="btn btn-primary">
               <span>Cotizar Materiales</span>
               <svg style={{ width: '20px', height: '20px', fill: 'currentColor' }} viewBox="0 0 24 24">
                 <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
               </svg>
             </a>
-            <a href="#productos" className="btn btn-secondary">Ver Catálogo</a>
+            <a href="https://www.instagram.com/construacerocarabobo/" target="_blank" rel="noreferrer" className="btn btn-secondary">Ver Comunidad</a>
           </div>
         </div>
 
@@ -85,8 +87,7 @@ export function Hero() {
             </a>
             <a 
               href="?cotizar=true" 
-              target="_blank"
-              rel="noopener noreferrer"
+              onClick={navigateToCotizar}
               style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', textAlign: 'center', padding: '10px', borderRadius: '10px', fontWeight: 700, fontSize: '0.85rem' }}
             >
               Enviar Mensaje

@@ -9,6 +9,7 @@ export interface DbProduct {
   stock_actual: number;
   imagen_url: string | null;
   activo: boolean;
+  especificaciones?: Record<string, string> | null;
 }
 
 // Premium realistic fallback products in case Supabase is down or not connected
@@ -23,7 +24,16 @@ export const fallbackProducts: DbProduct[] = [
     precio_usd: 12.50,
     stock_actual: 120,
     imagen_url: null,
-    activo: true
+    activo: true,
+    especificaciones: {
+      'Norma Técnica': 'ASTM A615 / COVENIN 316-2015',
+      'Grado de Acero': 'Grado 60 (Resistencia Premium)',
+      'Largo Estándar': '12.00 metros',
+      'Diámetro Nominal': '1/2 pulgada (12.7 mm)',
+      'Resistencia Fluencia': '≥ 4,200 kg/cm²',
+      'Procedencia / Marca': 'Sidor / Certificado de Calidad H-1022',
+      'Uso Recomendado': 'Refuerzo de vigas, fundaciones y muros de carga pesada'
+    }
   },
   {
     id: 'f2',
@@ -47,7 +57,17 @@ export const fallbackProducts: DbProduct[] = [
     precio_usd: 88.00,
     stock_actual: 15,
     imagen_url: null,
-    activo: true
+    activo: true,
+    especificaciones: {
+      'Norma Técnica': 'ASTM A36 / COVENIN 1148-2',
+      'Material': 'Acero Estructural Laminado en Caliente',
+      'Largo de Suministro': '6.00 metros',
+      'Altura del Perfil': '120 mm',
+      'Ancho de las Alas': '58 mm',
+      'Espesor del Alma': '5.1 mm',
+      'Resistencia a la Fluencia': '≥ 250 MPa (2,530 kg/cm²)',
+      'Uso B2B': 'Soportes de carga, pórticos industriales y correas para techos'
+    }
   },
   {
     id: 'f4',
@@ -88,7 +108,13 @@ export const fallbackProducts: DbProduct[] = [
 ];
 
 // Helper to provide realistic technical specs for local spec sheets
-export function getProductSpecs(product: DbProduct) {
+export function getProductSpecs(product: DbProduct): Record<string, string> {
+  // 1. Si el producto ya cuenta con especificaciones reales en su JSON, priorizarlas
+  if (product.especificaciones && typeof product.especificaciones === 'object') {
+    return product.especificaciones;
+  }
+
+  // 2. Fallback heurístico inteligente basado en análisis de cadena de texto
   const name = product.nombre.toLowerCase();
   if (name.includes('cabilla')) {
     return {
@@ -157,3 +183,33 @@ export function getCategoryLabel(cat: string): string {
 export function getCategoryLabelWithEmoji(cat: string): string {
   return getCategoryLabel(cat);
 }
+
+/**
+ * Validates Venezuelan Cedula or RIF format.
+ * Format examples: V-12345678, E-12345678, J-12345678-9, G-12345678-9, or pure digits 6-9 chars.
+ */
+export function isCedulaValid(val: string): boolean {
+  const clean = val.trim().toUpperCase();
+  if (!clean) return true; // Don't show error if empty (field is required anyway)
+  return /^(V|E|J|G|P|C)?[- ]?\d{5,9}([- ]?\d)?$/.test(clean);
+}
+
+/**
+ * Validates contact phone number length (10 to 13 digits when stripped of non-digits).
+ */
+export function isPhoneValid(val: string): boolean {
+  const clean = val.replace(/[^0-9]/g, '');
+  if (!clean) return true; // Don't show error if empty
+  return clean.length >= 10 && clean.length <= 13;
+}
+
+/**
+ * Perform ultra-fast 0ms Single Page Application (SPA) transition to the Cotizador route
+ * by intercepting standard link clicks and pushing URL search parameters without page reloads.
+ */
+export function navigateToCotizar(e: React.MouseEvent<HTMLAnchorElement>) {
+  e.preventDefault();
+  window.history.pushState({}, '', '?cotizar=true');
+  window.dispatchEvent(new PopStateEvent('popstate'));
+}
+

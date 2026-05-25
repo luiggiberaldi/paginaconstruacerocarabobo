@@ -4,11 +4,14 @@ import { useTasaBcv } from '../hooks/useTasaBcv';
 import { 
   DbProduct, 
   fallbackProducts, 
-  getCategoryLabel 
+  getCategoryLabel,
+  isCedulaValid,
+  isPhoneValid
 } from './AutocotizadorHelpers';
 import { ProductVisualCard } from './ProductVisualCard';
 import { SpecsModal } from './SpecsModal';
 import { CartDrawer } from './CartDrawer';
+import { CheckoutModal } from './CheckoutModal';
 
 // Optimized text normalization for Venezuelan market (removes accents, standardizes inch symbols)
 function normalizeText(text: string): string {
@@ -92,6 +95,9 @@ export function Autocotizador() {
   // Cart Drawer State (Mobile/Tablet)
   const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
 
+  // Checkout Modal State
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 992);
     handleResize();
@@ -105,6 +111,7 @@ export function Autocotizador() {
   // Form State - Persisted in localStorage
   const [clientName, setClientName] = useState(() => localStorage.getItem('construacero_client_name') || '');
   const [clientCedula, setClientCedula] = useState(() => localStorage.getItem('construacero_client_cedula') || '');
+  const [clientPhone, setClientPhone] = useState(() => localStorage.getItem('construacero_client_phone') || '');
   const [clientAddress, setClientAddress] = useState(() => localStorage.getItem('construacero_client_address') || '');
   
   // Selection State: { [productId]: quantity } - Persisted in localStorage
@@ -147,8 +154,9 @@ export function Autocotizador() {
   useEffect(() => {
     localStorage.setItem('construacero_client_name', clientName);
     localStorage.setItem('construacero_client_cedula', clientCedula);
+    localStorage.setItem('construacero_client_phone', clientPhone);
     localStorage.setItem('construacero_client_address', clientAddress);
-  }, [clientName, clientCedula, clientAddress]);
+  }, [clientName, clientCedula, clientPhone, clientAddress]);
 
   // Save Cart Items to localStorage
   useEffect(() => {
@@ -372,15 +380,21 @@ export function Autocotizador() {
   // Compute Running Totals (in USD BCV and VES)
   const totalUsd = useMemo(() => {
     return Object.entries(selectedItems).reduce((sum, [id, qty]) => {
-      const prod = products.find(p => p.id === id);
-      return sum + (prod ? prod.precio_usd * factor * qty : 0);
+      const prod = products.find(p => p.id === id) || 
+                   fallbackProducts.find(p => p.id === id) || {
+                     precio_usd: 15.0
+                   };
+      return sum + (prod ? prod.precio_usd * factor * Number(qty) : 0);
     }, 0);
   }, [selectedItems, products, factor]);
 
   const totalVes = useMemo(() => {
     return Object.entries(selectedItems).reduce((sum, [id, qty]) => {
-      const prod = products.find(p => p.id === id);
-      return sum + (prod ? prod.precio_usd * tasaBcv.tasaUsdt * qty : 0);
+      const prod = products.find(p => p.id === id) || 
+                   fallbackProducts.find(p => p.id === id) || {
+                     precio_usd: 15.0
+                   };
+      return sum + (prod ? prod.precio_usd * tasaBcv.tasaUsdt * Number(qty) : 0);
     }, 0);
   }, [selectedItems, products, tasaBcv.tasaUsdt]);
 
@@ -389,21 +403,41 @@ export function Autocotizador() {
   // Submit quote to WhatsApp
   const handleSendQuote = (e: React.FormEvent) => {
     e.preventDefault();
-    if (totalSelectedCount === 0 || clientName.trim() === '' || clientCedula.trim() === '' || clientAddress.trim() === '') return;
+    if (
+      totalSelectedCount === 0 || 
+      clientName.trim() === '' || 
+      clientCedula.trim() === '' || 
+      clientPhone.trim() === '' || 
+      clientAddress.trim() === '' ||
+      !isCedulaValid(clientCedula) ||
+      !isPhoneValid(clientPhone)
+    ) return;
 
     const itemsSummary = Object.entries(selectedItems).map(([id, qty]) => {
-      const prod = products.find(p => p.id === id);
-      if (!prod) return '';
+      const prod = products.find(p => p.id === id) || 
+                   fallbackProducts.find(p => p.id === id) || {
+                     id: id,
+                     codigo: 'ESP-' + id.substring(0, 4).toUpperCase(),
+                     nombre: 'Material Estructural Especial (' + id + ')',
+                     categoria: 'MATERIALES',
+                     descripcion: '',
+                     unidad: 'und',
+                     precio_usd: 15.0,
+                     stock_actual: 999,
+                     imagen_url: null,
+                     activo: true
+                   };
       const precioUsdBcv  = prod.precio_usd * factor;
       const precioVes     = prod.precio_usd * tasaBcv.tasaUsdt;
-      const subtotalUsd   = precioUsdBcv * qty;
-      const subtotalVes   = precioVes * qty;
+      const subtotalUsd   = precioUsdBcv * Number(qty);
+      const subtotalVes   = precioVes * Number(qty);
       return `- ${qty} x ${prod.nombre} (${prod.codigo})\n  Precio: $${precioUsdBcv.toFixed(2)} (≈ Bs. ${precioVes.toLocaleString('es-ES', { minimumFractionDigits: 2 })}) / ${prod.unidad}\n  Sub-total: $${subtotalUsd.toFixed(2)} (Bs. ${subtotalVes.toLocaleString('es-ES', { minimumFractionDigits: 2 })})`;
     }).filter(s => s !== '').join('\n\n');
 
     let text = `*SOLICITUD DE COTIZACIÓN - CONSTRUACERO CARABOBO*\n\n`;
     text += `👤 *Cliente:* ${clientName.trim()}\n`;
     text += `🪪 *Cédula:* ${clientCedula.trim()}\n`;
+    text += `📞 *Teléfono:* ${clientPhone.trim()}\n`;
     text += `📍 *Dirección:* ${clientAddress.trim()}\n\n`;
     text += `📦 *Materiales Solicitados:*\n${itemsSummary}\n\n`;
     text += `💰 *TOTAL ESTIMADO:*\n`;
@@ -440,6 +474,8 @@ export function Autocotizador() {
     setClientName,
     clientCedula,
     setClientCedula,
+    clientPhone,
+    setClientPhone,
     clientAddress,
     setClientAddress,
     totalUsd,
@@ -447,6 +483,7 @@ export function Autocotizador() {
     onRemoveFromCart: handleRemoveFromCart,
     onClearCart: handleClearCart,
     onSendQuote: handleSendQuote,
+    onCheckout: () => setIsCheckoutOpen(true),
   };
 
   return (
@@ -597,23 +634,7 @@ export function Autocotizador() {
               </button>
             )}
 
-            {/* Live Ticker Box */}
-            <div className="sidebar-title sidebar-tasa-title" style={{ marginTop: '10px' }}>
-              <span className="bcv-rate-dot-pulse" style={{ width: '6px', height: '6px', marginRight: '4px' }}></span>
-              Tasa Referencial
-            </div>
 
-            <div className={`bcv-rate-banner sidebar-tasa-banner ${!tasaBcv.cargando ? 'bcv-rate-banner-active' : ''}`} style={{ flexDirection: 'column', alignItems: 'stretch', gap: '8px', padding: '12px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
-                <span style={{ color: 'var(--text-muted)' }}>Tasa BCV:</span>
-                <strong style={{ color: 'white' }}>{tasaBcv.cargando ? '...' : `${tasaBcv.precio.toFixed(2)} Bs`}</strong>
-              </div>
-              {tasaBcv.ultimaActualizacion && (
-                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '6px' }}>
-                  Act. vía {tasaBcv.fuente.split('/')[0].trim()}
-                </div>
-              )}
-            </div>
 
             {dbError && (
               <div style={{ padding: '10px', borderRadius: '10px', backgroundColor: 'rgba(249, 115, 22, 0.05)', border: '1px solid rgba(249, 115, 22, 0.15)', fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -780,6 +801,25 @@ export function Autocotizador() {
         isAlreadyInCart={selectedSpecProduct ? selectedItems[selectedSpecProduct.id] !== undefined : false}
         onClose={() => setSelectedSpecProduct(null)}
         onAddToCart={() => selectedSpecProduct && handleToggleProduct(selectedSpecProduct)}
+      />
+
+      {/* Checkout Focused Modal Overlay */}
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        clientName={clientName}
+        setClientName={setClientName}
+        clientCedula={clientCedula}
+        setClientCedula={setClientCedula}
+        clientPhone={clientPhone}
+        setClientPhone={setClientPhone}
+        clientAddress={clientAddress}
+        setClientAddress={setClientAddress}
+        totalUsd={totalUsd}
+        totalVes={totalVes}
+        tasaBcv={tasaBcv}
+        onSubmit={handleSendQuote}
+        totalSelectedCount={totalSelectedCount}
       />
 
       {/* Mobile Cart Drawer Overlay & Container */}

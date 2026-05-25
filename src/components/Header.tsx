@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { navigateToCotizar } from './AutocotizadorHelpers';
 
 interface HeaderProps {
   standalone?: boolean;
@@ -110,7 +111,7 @@ export function Header({ standalone = false }: HeaderProps) {
                   <a href="#nosotros" className={activeSection === 'nosotros' ? 'active' : ''}>Nosotros</a>
                 </li>
                 <li>
-                  <a href="?cotizar=true" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', fontWeight: 700 }}>
+                  <a href="?cotizar=true" onClick={navigateToCotizar} style={{ color: 'var(--accent)', fontWeight: 700 }}>
                     Cotizar Online
                   </a>
                 </li>
@@ -137,7 +138,7 @@ export function Header({ standalone = false }: HeaderProps) {
             )}
 
             {!standalone && (
-              <a href="?cotizar=true" target="_blank" rel="noopener noreferrer" className="nav-cta" style={{ display: 'inline-block' }}>
+              <a href="?cotizar=true" onClick={navigateToCotizar} className="nav-cta" style={{ display: 'inline-block' }}>
                 Solicitar Cotización
               </a>
             )}
@@ -195,7 +196,10 @@ export function Header({ standalone = false }: HeaderProps) {
                 <a href="#nosotros" className={activeSection === 'nosotros' ? 'active' : ''} onClick={closeMobileMenu}>Nosotros</a>
               </li>
               <li>
-                <a href="?cotizar=true" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }} onClick={closeMobileMenu}>
+                <a href="?cotizar=true" style={{ color: 'var(--accent)' }} onClick={(e) => {
+                  closeMobileMenu();
+                  navigateToCotizar(e);
+                }}>
                   Cotizar Online
                 </a>
               </li>
@@ -206,10 +210,11 @@ export function Header({ standalone = false }: HeaderProps) {
         {!standalone && (
           <a 
             href="?cotizar=true" 
-            target="_blank" 
-            rel="noopener noreferrer"
             className="nav-cta" 
-            onClick={closeMobileMenu} 
+            onClick={(e) => {
+              closeMobileMenu();
+              navigateToCotizar(e);
+            }} 
             style={{ marginTop: '20px', display: 'block', textAlign: 'center' }}
           >
             Solicitar Cotización

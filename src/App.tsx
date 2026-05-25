@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Toaster } from 'sonner';
 import { Header } from './components/Header';
+import { MainHero } from './components/MainHero';
 import { Hero } from './components/Hero';
 import { Stats } from './components/Stats';
 import { Materials } from './components/Materials';
@@ -9,6 +10,7 @@ import { InstagramGallery } from './components/InstagramGallery';
 import { Autocotizador } from './components/Autocotizador';
 import { Testimonials } from './components/Testimonials';
 import { Footer } from './components/Footer';
+import { WhatsAppFloat } from './components/WhatsAppFloat';
 
 export default function App() {
   const [isCotizadorRoute, setIsCotizadorRoute] = useState(false);
@@ -69,6 +71,9 @@ export default function App() {
       <Header standalone={false} />
       
       <main className="flex-1">
+        {/* Main Fullscreen Luxe Hero Banner */}
+        <MainHero />
+
         {/* Hero Banner with Live Instagram Profile Card Mockup */}
         <Hero />
         
@@ -90,6 +95,9 @@ export default function App() {
 
       {/* Corporate Siderurgic Footer */}
       <Footer standalone={false} />
+
+      {/* Floating WhatsApp button (Landing page only) */}
+      <WhatsAppFloat />
     </div>
   );
 }

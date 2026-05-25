@@ -44,28 +44,31 @@ const testimonialsData: Testimonial[] = [
 
 export function Testimonials() {
   return (
-    <section className="section-padding bg-dark container reveal active" style={{ borderRadius: '24px', padding: '60px', marginBottom: '100px', backgroundColor: 'var(--bg-card)' }}>
-      <div className="section-header">
-        <h2>Sólido <span>Respaldo Profesional</span></h2>
-        <p>Lo que dicen ingenieros, maestros de obra y empresas metalúrgicas que confían en nuestro suministro de acero.</p>
-      </div>
+    <section id="testimonios" className="section-padding testimonials-section">
+      <div className="container testimonials-card reveal active">
+        <div className="section-header">
+          <h2>Sólido <span>Respaldo Profesional</span></h2>
+          <p>Lo que dicen ingenieros, maestros de obra y empresas metalúrgicas que confían en nuestro suministro de acero.</p>
+        </div>
 
-      <div className="testi-carousel">
-        {testimonialsData.map((testi) => (
-          <div key={testi.id} className="testi-card">
-            <span className="testi-quote-icon">“</span>
-            <div className="testi-rating">{testi.stars}</div>
-            <p className="testi-content">{testi.content}</p>
-            <div className="testi-user">
-              <div className="testi-avatar">{testi.avatar}</div>
-              <div className="testi-details">
-                <h4>{testi.name}</h4>
-                <p>{testi.role}</p>
+        <div className="testi-carousel">
+          {testimonialsData.map((testi) => (
+            <div key={testi.id} className="testi-card">
+              <span className="testi-quote-icon">“</span>
+              <div className="testi-rating">{testi.stars}</div>
+              <p className="testi-content">{testi.content}</p>
+              <div className="testi-user">
+                <div className="testi-avatar">{testi.avatar}</div>
+                <div className="testi-details">
+                  <h4>{testi.name}</h4>
+                  <p>{testi.role}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
 }
+

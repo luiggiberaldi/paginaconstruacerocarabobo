@@ -1,3 +1,5 @@
+import { navigateToCotizar } from './AutocotizadorHelpers';
+
 interface FooterProps {
   standalone?: boolean;
 }
@@ -51,7 +53,7 @@ export function Footer({ standalone = false }: FooterProps) {
                 <li><a href="#productos">Materiales Suministrados</a></li>
                 <li><a href="#nosotros">Sobre Nosotros</a></li>
                 <li>
-                  <a href="?cotizar=true" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', fontWeight: 700 }}>
+                  <a href="?cotizar=true" onClick={navigateToCotizar} style={{ color: 'var(--accent)', fontWeight: 700 }}>
                     Cotizar en Línea
                   </a>
                 </li>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DbProduct } from './AutocotizadorHelpers';
+import { DbProduct, isCedulaValid, isPhoneValid, fallbackProducts } from './AutocotizadorHelpers';
 
 interface CartDrawerProps {
   selectedItems: { [key: string]: number };
@@ -15,11 +15,14 @@ interface CartDrawerProps {
   setClientName: (name: string) => void;
   clientCedula: string;
   setClientCedula: (cedula: string) => void;
+  clientPhone: string;
+  setClientPhone: (phone: string) => void;
   clientAddress: string;
   setClientAddress: (address: string) => void;
   totalUsd: number;
   totalVes: number;
   onSendQuote: (e: React.FormEvent) => void;
+  onCheckout: () => void;
 }
 
 export function CartDrawer({
@@ -36,11 +39,14 @@ export function CartDrawer({
   setClientName,
   clientCedula,
   setClientCedula,
+  clientPhone,
+  setClientPhone,
   clientAddress,
   setClientAddress,
   totalUsd,
   totalVes,
   onSendQuote,
+  onCheckout,
 }: CartDrawerProps) {
   const totalSelectedCount = Object.keys(selectedItems).length;
 
@@ -119,19 +125,36 @@ export function CartDrawer({
         <>
           <div className="cart-items-list">
             {Object.entries(selectedItems).map(([id, qty]) => {
-              const prod = products.find((p) => p.id === id);
-              if (!prod) return null;
+              const prod = products.find((p) => p.id === id) || 
+                           fallbackProducts.find((p) => p.id === id) || {
+                             id: id,
+                             codigo: 'ESP-' + id.substring(0, 4).toUpperCase(),
+                             nombre: 'Material Estructural Especial (' + id + ')',
+                             categoria: 'MATERIALES',
+                             descripcion: '',
+                             unidad: 'und',
+                             precio_usd: 15.0,
+                             stock_actual: 999,
+                             imagen_url: null,
+                             activo: true
+                           };
 
               const priceUsdBcv = prod.precio_usd * factor;
               const subtotalUsd = priceUsdBcv * qty;
 
               return (
                 <div key={id} className="cart-item-row">
-                  <img
-                    src={prod.imagen_url || '/assets/product_placeholder.png'}
-                    alt={prod.nombre}
-                    className="cart-item-img"
-                  />
+                  {prod.imagen_url ? (
+                    <img
+                      src={prod.imagen_url}
+                      alt={prod.nombre}
+                      className="cart-item-img"
+                    />
+                  ) : (
+                    <div className="cart-item-img" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--accent-light)', color: 'var(--accent)', fontSize: '1.2rem', fontWeight: 'bold' }}>
+                      ⚙️
+                    </div>
+                  )}
 
                   <div className="cart-item-details">
                     <h5 className="cart-item-title" title={prod.nombre}>
@@ -163,62 +186,17 @@ export function CartDrawer({
             })}
           </div>
 
-          {/* Checkout Details Form */}
-          <form className="checkout-details-form" onSubmit={onSendQuote}>
-            <div className="sidebar-title" style={{ paddingBottom: '8px', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <svg style={{ width: '15px', height: '15px', fill: 'none', stroke: 'currentColor', strokeWidth: 2.5, opacity: 0.8 }} viewBox="0 0 24 24">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-              Información de Despacho
-            </div>
-
-            <div className="form-group" style={{ marginBottom: '10px' }}>
-              <label className="form-label">Nombre y Apellido</label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="Ej: Pedro Pérez"
-                value={clientName}
-                onChange={(e) => setClientName(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="form-group" style={{ marginBottom: '10px' }}>
-              <label className="form-label">Cédula de Identidad</label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="Ej: V-12345678"
-                value={clientCedula}
-                onChange={(e) => setClientCedula(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="form-group" style={{ marginBottom: '16px' }}>
-              <label className="form-label">Dirección de Entrega</label>
-              <textarea
-                className="form-input"
-                rows={2}
-                placeholder="Ej: Av. Bolívar, Calle 4, Local 12-B..."
-                value={clientAddress}
-                onChange={(e) => setClientAddress(e.target.value)}
-                required
-              />
-            </div>
-
-            {/* Totals Summary */}
-            <div className="checkout-totals-summary">
+          {/* Sticky Cart Footer with Totals and CTA Button */}
+          <div className="cart-footer-sticky">
+            <div className="checkout-totals-summary" style={{ marginTop: 0, marginBottom: '16px' }}>
               <div className="total-row">
                 <span className="total-label">Total en USD (BCV):</span>
-                <span className="total-value-usd">${totalUsd.toFixed(2)}</span>
+                <span className="total-value-usd" style={{ fontSize: '1.15rem' }}>${totalUsd.toFixed(2)}</span>
               </div>
 
               <div className="total-row" style={{ marginTop: '2px' }}>
-                <span className="total-label">Total en Bolívares (VES):</span>
-                <span className="total-value-ves">
+                <span className="total-label" style={{ fontSize: '0.72rem' }}>Total en Bolívares (VES):</span>
+                <span className="total-value-ves" style={{ fontSize: '0.88rem' }}>
                   Bs. {totalVes.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>
@@ -228,23 +206,25 @@ export function CartDrawer({
               </div>
             </div>
 
-            {/* Submit CTA */}
             <button
-              type="submit"
+              type="button"
               className="checkout-submit-btn"
-              disabled={
-                totalSelectedCount === 0 ||
-                clientName.trim() === '' ||
-                clientCedula.trim() === '' ||
-                clientAddress.trim() === ''
-              }
+              onClick={onCheckout}
+              disabled={totalSelectedCount === 0}
+              style={{
+                background: 'linear-gradient(135deg, #128c7e, #25d366)',
+                boxShadow: '0 4px 14px rgba(37, 211, 102, 0.25)',
+                border: 'none',
+                cursor: totalSelectedCount > 0 ? 'pointer' : 'not-allowed',
+                opacity: totalSelectedCount > 0 ? 1 : 0.45,
+              }}
             >
               <span>Contactar con un Asesor Comercial</span>
               <svg style={{ width: '16px', height: '16px', fill: 'currentColor' }} viewBox="0 0 24 24">
                 <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
               </svg>
             </button>
-          </form>
+          </div>
         </>
       )}
     </>

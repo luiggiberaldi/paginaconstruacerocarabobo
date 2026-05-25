@@ -642,6 +642,7 @@
   max-height: 360px;
   overflow-y: auto;
   padding-right: 4px;
+  flex-shrink: 0 !important; /* Prevent flex height collapse in both sidebar and drawers */
 }
 
 .cart-items-list::-webkit-scrollbar {
@@ -824,9 +825,9 @@
 }
 
 .checkout-submit-btn:disabled {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: var(--text-muted);
+  background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+  opacity: 0.45;
+  color: rgba(255, 255, 255, 0.7);
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -1350,7 +1351,7 @@
 
 .cart-drawer-container .cart-items-list {
   max-height: none !important;
-  flex: 1;
+  flex: none !important;
 }
 
 .cart-drawer-container .checkout-details-form {
@@ -1444,6 +1445,29 @@
     min-height: 44px;
     z-index: 10;
   }
+}
+
+/* Sticky Cart Footer Wrapper and dynamic scroll areas */
+.cart-footer-sticky {
+  position: sticky;
+  bottom: -20px; /* Offset the 20px padding of the sidebar card */
+  background-color: var(--bg-card);
+  padding: 16px 0 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  z-index: 10;
+  margin-top: auto;
+}
+
+.cart-drawer-container .cart-footer-sticky {
+  bottom: -24px; /* Offset the 24px padding of the mobile drawer */
+  background-color: var(--bg-dark);
+}
+
+.amazon-cart-sidebar .cart-items-list,
+.cart-drawer-container .cart-items-list {
+  flex: 1 0 auto !important; /* Grow to fit, never collapse to 0px */
+  max-height: none !important;
+  overflow-y: auto;
 }
 
 

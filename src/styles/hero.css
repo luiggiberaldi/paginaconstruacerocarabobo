@@ -1,8 +1,8 @@
 /* Hero Section with Premium Instagram Card Mockup */
 .hero {
   position: relative;
-  padding-top: 160px;
-  padding-bottom: 80px;
+  padding-top: 100px;
+  padding-bottom: 100px;
   background: radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.08) 0%, rgba(0,0,0,0) 50%);
   overflow: hidden;
 }

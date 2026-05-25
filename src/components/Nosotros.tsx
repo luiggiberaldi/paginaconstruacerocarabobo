@@ -1,6 +1,6 @@
 export function Nosotros() {
   return (
-    <section id="nosotros" className="section-padding bg-dark" style={{ backgroundColor: 'var(--bg-card)' }}>
+    <section id="nosotros" className="section-padding bg-dark" style={{ backgroundColor: 'var(--bg-darker)' }}>
       <div className="container about-grid reveal active">
         
         {/* Left Side: Images & Badge */}
