@@ -104,7 +104,32 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 3. App Shell assets (CSS, JS, local images) -> Stale-While-Revalidate
+  // 3. Navigation requests (HTML) -> Network-First (with cache fallback)
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          if (
+            networkResponse.status === 200 &&
+            event.request.method === 'GET'
+          ) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          return caches.match('/index.html').then((cachedIndex) => {
+            return cachedIndex || caches.match(event.request);
+          });
+        })
+    );
+    return;
+  }
+
+  // 4. App Shell assets (CSS, JS, local images) -> Stale-While-Revalidate
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       const fetchPromise = fetch(event.request)
@@ -115,17 +140,15 @@ self.addEventListener('fetch', (event) => {
             event.request.method === 'GET' &&
             requestUrl.origin === self.location.origin
           ) {
+            const responseToCache = networkResponse.clone();
             caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, networkResponse.clone());
+              cache.put(event.request, responseToCache);
             });
           }
           return networkResponse;
         })
-        .catch(() => {
-          // Offline fallback for index.html if request fails and is for navigation
-          if (event.request.mode === 'navigate') {
-            return caches.match('/index.html');
-          }
+        .catch((err) => {
+          console.error('[Service Worker] Fetch failed for:', event.request.url, err);
         });
 
       return cachedResponse || fetchPromise;
