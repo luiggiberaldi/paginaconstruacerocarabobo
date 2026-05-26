@@ -82,6 +82,65 @@ const VENEZUELAN_SYNONYMS: { [key: string]: string[] } = {
 
 export function Autocotizador() {
   const tasaBcv = useTasaBcv();
+
+// Category SVG icon map (used for mobile chips and filter tags)
+const CATEGORY_ICONS: Record<string, React.ReactNode> = {
+  'Cabillas': (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+      <line x1="6" y1="20" x2="18" y2="4" />
+      <line x1="10" y1="20" x2="20" y2="10" />
+      <line x1="4" y1="14" x2="14" y2="4" />
+    </svg>
+  ),
+  'Vigas y Perfiles': (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+      <path d="M6 5h12 M6 19h12 M12 5v14" />
+    </svg>
+  ),
+  'Tuberías': (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+      <circle cx="8" cy="12" r="4" />
+      <circle cx="16" cy="12" r="4" />
+      <line x1="8" y1="8" x2="16" y2="8" />
+      <line x1="8" y1="16" x2="16" y2="16" />
+    </svg>
+  ),
+  'Cemento': (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+      <path d="M6 2L18 2 L20 6 L20 20 C20 21 19 22 18 22 L6 22 C5 22 4 21 4 20 L4 6 Z" />
+      <path d="M4 8h16" />
+      <path d="M12 11l-3 3h6z" fill="currentColor" />
+    </svg>
+  ),
+  'Mallas': (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <line x1="9" y1="3" x2="9" y2="21" />
+      <line x1="15" y1="3" x2="15" y2="21" />
+      <line x1="3" y1="9" x2="21" y2="9" />
+      <line x1="3" y1="15" x2="21" y2="15" />
+    </svg>
+  ),
+  'Alambres': (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+      <path d="M4 10c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8-8-3.6-8-8z" />
+      <path d="M7 11c0-2.8 2.2-5 5-5s5 2.2 5 5-2.2 5-5 5-5-2.2-5-5z" opacity="0.7" />
+    </svg>
+  ),
+  'Láminas': (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+      <polygon points="12 2 2 7 12 12 22 7 12 2" />
+      <polyline points="2 17 12 22 22 17" />
+      <polyline points="2 12 12 17 22 12" />
+    </svg>
+  ),
+  'Accesorios': (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+    </svg>
+  ),
+};
+
   const [products, setProducts] = useState<DbProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [dbError, setDbError] = useState<string | null>(null);
@@ -552,133 +611,180 @@ export function Autocotizador() {
           
           {/* COLUMN 1: Category sidebar and live rates */}
           <aside className="amazon-sidebar-left">
-            <div className="sidebar-title">
-              <svg style={{ width: '16px', height: '16px', fill: 'currentColor' }} viewBox="0 0 24 24">
-                <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
-              </svg>
-              Filtrar Categorías
-            </div>
 
-            {/* Category Search Input */}
-            <div className="category-search-wrapper" style={{ margin: '0 0 4px 0', position: 'relative' }}>
-              <input 
-                type="text" 
-                className="category-search-input"
-                placeholder="Buscar categoría..."
-                value={categorySearchTerm}
-                onChange={(e) => setCategorySearchTerm(e.target.value)}
-                style={{
-                  width: '100%',
-                  backgroundColor: 'rgba(0, 0, 0, 0.35)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  borderRadius: '10px',
-                  padding: '8px 12px 8px 32px',
-                  color: 'white',
-                  fontSize: '0.75rem',
-                  fontFamily: 'var(--font-body)',
-                  outline: 'none',
-                  transition: 'all 0.2s ease',
-                }}
-              />
-              <svg 
-                style={{ 
-                  position: 'absolute', 
-                  left: '10px', 
-                  top: '50%', 
-                  transform: 'translateY(-50%)', 
-                  width: '13px', 
-                  height: '13px', 
-                  fill: 'var(--text-muted)',
-                  pointerEvents: 'none' 
-                }} 
-                viewBox="0 0 24 24"
-              >
-                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-              </svg>
-              {categorySearchTerm && (
-                <button
-                  type="button"
-                  onClick={() => setCategorySearchTerm('')}
-                  style={{
-                    position: 'absolute',
-                    right: '10px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'none',
-                    border: 'none',
-                    color: 'var(--text-muted)',
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    padding: 0,
-                    lineHeight: 1
-                  }}
-                  title="Limpiar búsqueda"
-                >
-                  &times;
-                </button>
-              )}
-            </div>
+            {/* ── MOBILE: search pill + chip strip ─────────────────── */}
+            {isMobile && (
+              <div className="mobile-category-outer">
 
-            <div className="category-filter-list-container">
-              <nav className="category-filter-list">
-                <button 
-                  type="button" 
-                  className={`category-filter-item ${selectedCategory === '' ? 'active' : ''}`}
-                  onClick={() => setSelectedCategory('')}
-                >
-                  <span className="category-filter-item-name">
-                    <svg style={{ width: '13px', height: '13px', fill: 'currentColor', opacity: 0.8 }} viewBox="0 0 24 24">
-                      <path d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"/>
-                    </svg>
-                    Todos los Productos
-                  </span>
-                  <span className="category-item-count">{products.length}</span>
-                </button>
+                {/* Mobile category search */}
+                <div className="mobile-cat-search-wrapper">
+                  <svg className="mobile-cat-search-icon" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                  </svg>
+                  <input
+                    type="text"
+                    className="mobile-cat-search-input"
+                    placeholder="Buscar categoría..."
+                    value={categorySearchTerm}
+                    onChange={e => setCategorySearchTerm(e.target.value)}
+                  />
+                  {categorySearchTerm && (
+                    <button
+                      type="button"
+                      className="mobile-cat-search-clear"
+                      onClick={() => setCategorySearchTerm('')}
+                      aria-label="Limpiar búsqueda de categoría"
+                    >
+                      <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                    </button>
+                  )}
+                </div>
 
-                {visibleCategories.map(cat => (
-                  <button 
-                    key={cat}
-                    type="button" 
-                    className={`category-filter-item ${selectedCategory === cat ? 'active' : ''}`}
-                    onClick={() => setSelectedCategory(cat)}
-                  >
-                    <span className="category-filter-item-name" title={cat}>
-                      <svg style={{ width: '12px', height: '12px', fill: 'currentColor', opacity: 0.6 }} viewBox="0 0 24 24">
-                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                      </svg>
-                      {cat}
-                    </span>
-                    <span className="category-item-count">{categoryCounts[cat] || 0}</span>
-                  </button>
-                ))}
-              </nav>
-            </div>
+                {/* Scrollable chip strip with gradient masks */}
+                <div className="mobile-category-strip">
+                  <div className="category-filter-list-container">
+                    <nav className="category-filter-list">
+                      <button
+                        type="button"
+                        className={`category-filter-item ${selectedCategory === '' ? 'active' : ''}`}
+                        onClick={() => setSelectedCategory('')}
+                      >
+                        <span className="category-chip-icon">
+                          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+                            <rect x="3" y="3" width="7" height="7" />
+                            <rect x="14" y="3" width="7" height="7" />
+                            <rect x="14" y="14" width="7" height="7" />
+                            <rect x="3" y="14" width="7" height="7" />
+                          </svg>
+                        </span>
+                        <span className="category-chip-label">Todos</span>
+                        <span className="category-item-count">{products.length}</span>
+                      </button>
+                      {visibleCategories.map(cat => (
+                        <button
+                          key={cat}
+                          type="button"
+                          className={`category-filter-item ${selectedCategory === cat ? 'active' : ''}`}
+                          onClick={() => setSelectedCategory(cat)}
+                        >
+                          <span className="category-chip-icon">{CATEGORY_ICONS[cat] || '📦'}</span>
+                          <span className="category-chip-label">{cat}</span>
+                          <span className="category-item-count">{categoryCounts[cat] || 0}</span>
+                        </button>
+                      ))}
+                      {visibleCategories.length === 0 && categorySearchTerm && (
+                        <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', padding: '10px 8px', whiteSpace: 'nowrap', opacity: 0.7 }}>
+                          Sin coincidencias
+                        </span>
+                      )}
+                    </nav>
+                  </div>
+                </div>
 
-            {!isMobile && filteredCategories.length > 8 && (
-              <button 
-                type="button" 
-                className="category-expand-btn"
-                onClick={() => setShowAllCategories(!showAllCategories)}
-              >
-                <span>{showAllCategories ? 'Ver menos' : `Ver más (${filteredCategories.length - 8})`}</span>
-                <svg 
-                  style={{ 
-                    width: '10px', 
-                    height: '10px', 
-                    fill: 'none', 
-                    stroke: 'currentColor', 
-                    strokeWidth: 3,
-                    transform: showAllCategories ? 'rotate(180deg)' : 'rotate(0deg)',
-                    transition: 'transform 0.2s ease'
-                  }} 
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
+              </div>
             )}
 
+            {/* ── DESKTOP: sticky sidebar with title, search, list ── */}
+            {!isMobile && (
+              <>
+                <div className="sidebar-title">
+                  <svg style={{ width: '16px', height: '16px', fill: 'currentColor' }} viewBox="0 0 24 24">
+                    <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+                  </svg>
+                  Filtrar Categorías
+                </div>
 
+                <div className="category-search-wrapper" style={{ margin: '0 0 4px 0', position: 'relative' }}>
+                  <input
+                    type="text"
+                    className="category-search-input"
+                    placeholder="Buscar categoría..."
+                    value={categorySearchTerm}
+                    onChange={(e) => setCategorySearchTerm(e.target.value)}
+                    style={{
+                      width: '100%',
+                      backgroundColor: 'rgba(0, 0, 0, 0.35)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '10px',
+                      padding: '8px 12px 8px 32px',
+                      color: 'white',
+                      fontSize: '0.75rem',
+                      fontFamily: 'var(--font-body)',
+                      outline: 'none',
+                      transition: 'all 0.2s ease',
+                    }}
+                  />
+                  <svg
+                    style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', width: '13px', height: '13px', fill: 'var(--text-muted)', pointerEvents: 'none' }}
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                  </svg>
+                  {categorySearchTerm && (
+                    <button
+                      type="button"
+                      onClick={() => setCategorySearchTerm('')}
+                      style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1rem', padding: 0, lineHeight: 1 }}
+                      title="Limpiar búsqueda"
+                    >
+                      &times;
+                    </button>
+                  )}
+                </div>
+
+                <div className="category-filter-list-container">
+                  <nav className="category-filter-list">
+                    <button
+                      type="button"
+                      className={`category-filter-item ${selectedCategory === '' ? 'active' : ''}`}
+                      onClick={() => setSelectedCategory('')}
+                    >
+                      <span className="category-filter-item-name">
+                        <svg style={{ width: '13px', height: '13px', fill: 'currentColor', opacity: 0.8 }} viewBox="0 0 24 24">
+                          <path d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"/>
+                        </svg>
+                        Todos los Productos
+                      </span>
+                      <span className="category-item-count">{products.length}</span>
+                    </button>
+                    {visibleCategories.map(cat => (
+                      <button
+                        key={cat}
+                        type="button"
+                        className={`category-filter-item ${selectedCategory === cat ? 'active' : ''}`}
+                        onClick={() => setSelectedCategory(cat)}
+                      >
+                        <span className="category-filter-item-name" title={cat}>
+                          {CATEGORY_ICONS[cat] || (
+                            <svg style={{ width: '12px', height: '12px', fill: 'currentColor', opacity: 0.6 }} viewBox="0 0 24 24">
+                              <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                            </svg>
+                          )}
+                          {cat}
+                        </span>
+                        <span className="category-item-count">{categoryCounts[cat] || 0}</span>
+                      </button>
+                    ))}
+                  </nav>
+                </div>
+
+                {filteredCategories.length > 8 && (
+                  <button
+                    type="button"
+                    className="category-expand-btn"
+                    onClick={() => setShowAllCategories(!showAllCategories)}
+                  >
+                    <span>{showAllCategories ? 'Ver menos' : `Ver más (${filteredCategories.length - 8})`}</span>
+                    <svg
+                      style={{ width: '10px', height: '10px', fill: 'none', stroke: 'currentColor', strokeWidth: 3, transform: showAllCategories ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                )}
+              </>
+            )}
 
             {dbError && (
               <div style={{ padding: '10px', borderRadius: '10px', backgroundColor: 'rgba(249, 115, 22, 0.05)', border: '1px solid rgba(249, 115, 22, 0.15)', fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -691,6 +797,8 @@ export function Autocotizador() {
               </div>
             )}
           </aside>
+
+
 
           {/* COLUMN 2: Search and Visual Product Grid */}
           <main className="amazon-center-content">
@@ -721,6 +829,22 @@ export function Autocotizador() {
               </div>
             </div>
 
+            {/* Mobile: active filter breadcrumb shown above product grid */}
+            {isMobile && selectedCategory && (
+              <div className="mobile-active-filter-bar">
+                <span>Filtro:</span>
+                <button
+                  type="button"
+                  className="filter-tag"
+                  onClick={() => setSelectedCategory('')}
+                  title="Quitar filtro"
+                >
+                  <span className="filter-tag-icon">{CATEGORY_ICONS[selectedCategory] || '📦'}</span>
+                  {selectedCategory}
+                  <span className="filter-clear-x">✕</span>
+                </button>
+              </div>
+            )}
             {/* Product Cards list or loader */}
             {loading ? (
               <div className="amazon-products-grid">

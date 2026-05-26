@@ -89,7 +89,10 @@ export function Header({ standalone = false }: HeaderProps) {
               alt="Construacero Logo" 
               style={{ height: '42px', width: 'auto', objectFit: 'contain', borderRadius: '6px' }} 
             />
-            Construacero<span>Carabobo</span>
+            <span className="logo-text-group">
+              <span className="logo-brand">Construacero</span>
+              <span className="logo-branch">Carabobo</span>
+            </span>
           </a>
           
           <ul className="nav-links">
@@ -167,7 +170,10 @@ export function Header({ standalone = false }: HeaderProps) {
       <div className={`mobile-nav-drawer ${mobileMenuOpen ? 'active' : ''}`}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
           <a href="#" className="logo" onClick={closeMobileMenu}>
-            Construacero<span>Carabobo</span>
+            <span className="logo-text-group">
+              <span className="logo-brand">Construacero</span>
+              <span className="logo-branch">Carabobo</span>
+            </span>
           </a>
           <button 
             onClick={closeMobileMenu}

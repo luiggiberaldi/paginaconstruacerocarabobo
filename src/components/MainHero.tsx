@@ -1,3 +1,5 @@
+import { navigateToCotizar } from './AutocotizadorHelpers';
+
 export function MainHero() {
   const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '584124051793';
   const whatsappMessage = encodeURIComponent('¡Hola! Vengo de la página web y deseo solicitar un presupuesto para materiales siderúrgicos al mayor.');
@@ -28,15 +30,32 @@ export function MainHero() {
           </p>
           
           <div className="main-hero-ctas">
+            {/* Desktop WhatsApp CTA */}
             <a 
               href={whatsappUrl} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="btn main-hero-btn-whatsapp"
+              className="btn main-hero-btn-whatsapp desktop-only-cta"
             >
               <span>Contactar por WhatsApp</span>
               <svg style={{ width: '18px', height: '18px', fill: 'currentColor' }} viewBox="0 0 24 24">
                 <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+              </svg>
+            </a>
+
+            {/* Mobile Quote CTA */}
+            <a 
+              href="?cotizar=true"
+              onClick={navigateToCotizar}
+              className="btn main-hero-btn-whatsapp mobile-only-cta"
+            >
+              <span>Solicitar Cotización</span>
+              <svg style={{ width: '18px', height: '18px', fill: 'none', stroke: 'currentColor', strokeWidth: '2.5', strokeLinecap: 'round', strokeLinejoin: 'round' }} viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
               </svg>
             </a>
             

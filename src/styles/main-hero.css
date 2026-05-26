@@ -95,6 +95,10 @@
   align-items: center;
 }
 
+.mobile-only-cta {
+  display: none !important;
+}
+
 /* WhatsApp CTA Button with Glowing Safety Orange Effect */
 .main-hero-btn-whatsapp {
   background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
@@ -185,6 +189,14 @@
     font-size: 1.05rem;
     margin-left: auto;
     margin-right: auto;
+  }
+  
+  .desktop-only-cta {
+    display: none !important;
+  }
+  
+  .mobile-only-cta {
+    display: inline-flex !important;
   }
 }
 

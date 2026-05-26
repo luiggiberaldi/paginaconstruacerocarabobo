@@ -44,7 +44,7 @@
 /* Three-Column Amazon Grid */
 .amazon-layout-grid {
   display: grid;
-  grid-template-columns: 260px 1fr 380px;
+  grid-template-columns: 260px minmax(0, 1fr) 380px; /* Use minmax(0, 1fr) to prevent content width blowout */
   gap: 24px;
   align-items: start;
 }
@@ -140,6 +140,16 @@
   max-width: 155px; /* Ensures text never wraps to two lines */
 }
 
+.category-filter-item-name svg,
+.category-chip-icon svg,
+.filter-tag-icon svg {
+  width: 14px !important;
+  height: 14px !important;
+  stroke: currentColor;
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .category-item-count {
   font-size: 0.7rem;
   opacity: 0.6;
@@ -181,6 +191,8 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-width: 0;
+  max-width: 100%; /* Bulletproof constraint against child grid blowout */
 }
 
 /* Search Bar & Active Stats block */
@@ -246,6 +258,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+  max-width: 100%; /* Bulletproof constraint against child image blowouts */
+  min-width: 0;
 }
 
 @media (max-width: 1200px) {
@@ -267,6 +281,8 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  min-width: 0;
+  max-width: 100%; /* Bulletproof constraint to fit grid cell width */
 }
 
 .product-visual-card:hover {
@@ -284,6 +300,7 @@
 /* Image Wrapper */
 .product-img-wrapper {
   width: 100%;
+  max-width: 100%; /* Ensures wrapper never expands beyond card width */
   height: 170px;
   aspect-ratio: 16 / 10;
   background-color: #0c0e12;
@@ -294,6 +311,7 @@
 
 .product-img {
   width: 100%;
+  max-width: 100%; /* Bulletproof constraint to prevent raw image size blowout */
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -940,7 +958,7 @@
 /* Responsive Overrides & Mobile Overhaul (Style Amazon/MercadoLibre) */
 @media (max-width: 1200px) {
   .amazon-layout-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) !important; /* Force content shrink on mobile viewport columns */
   }
   
   .amazon-sidebar-left {
@@ -976,7 +994,7 @@
     padding: 0 !important;
     box-shadow: none !important;
     gap: 0 !important;
-    margin-bottom: 12px !important;
+    margin-bottom: 8px !important;
     position: relative;
     top: 0;
   }
@@ -985,7 +1003,8 @@
   .amazon-sidebar-left .sidebar-title,
   .category-search-wrapper,
   .sidebar-tasa-title,
-  .sidebar-tasa-banner {
+  .sidebar-tasa-banner,
+  .category-expand-btn {
     display: none !important;
   }
 
@@ -1005,69 +1024,223 @@
   }
 
   .autocotizador-title-block p {
-    display: none !important; /* Hide long corporate texts on mobile */
+    display: none !important;
   }
 
-  /* Category Swipeable Carousel (Amazon/MercadoLibre style) */
+  /* ── MOBILE CATEGORY STRIP WRAPPER ──────────────────────────── */
+  /* Wraps the scroll container with gradient fade masks on both edges */
+  .mobile-category-strip {
+    position: relative;
+    margin: 0 -12px 4px -12px;
+  }
+
+  /* Left fade mask — shows depth and hints scroll */
+  .mobile-category-strip::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 28px;
+    background: linear-gradient(to right, var(--bg-dark, #0c0e12), transparent);
+    z-index: 2;
+    pointer-events: none;
+    border-radius: 0;
+  }
+
+  /* Right fade mask — inverted */
+  .mobile-category-strip::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    background: linear-gradient(to left, var(--bg-dark, #0c0e12), transparent);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* ── SCROLLABLE CONTAINER ────────────────────────────────────── */
   .category-filter-list-container {
     max-height: none !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
-    padding: 6px 0 12px 0 !important;
-    margin: 0 -12px !important;
-    padding-left: 12px !important;
-    padding-right: 12px !important;
+    padding: 8px 24px 14px 24px !important;
+    margin: 0 !important;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-  }
-  
-  .category-filter-list-container::-webkit-scrollbar {
-    height: 4px !important;
-  }
-  
-  .category-filter-list-container::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.12) !important;
-    border-radius: 4px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox: hide scrollbar but keep scroll */
   }
 
+  .category-filter-list-container::-webkit-scrollbar {
+    display: none !important; /* Chrome/Safari: hide scrollbar visually */
+  }
+
+  /* ── HORIZONTAL CHIP ROW ─────────────────────────────────────── */
   .category-filter-list {
     flex-direction: row !important;
     flex-wrap: nowrap !important;
     gap: 8px !important;
     width: max-content !important;
+    padding: 2px 4px !important;
   }
 
+  /* ── CATEGORY CHIP (Default / Inactive) ─────────────────────── */
   .category-filter-item {
     flex: 0 0 auto !important;
     width: auto !important;
     min-width: 0 !important;
-    padding: 8px 16px !important;
-    border-radius: 9999px !important; /* Pill style */
+    padding: 9px 16px 9px 12px !important;
+    border-radius: 9999px !important;
     white-space: nowrap !important;
-    font-size: 0.78rem !important;
-    background-color: rgba(255, 255, 255, 0.03) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+    background-color: rgba(255, 255, 255, 0.04) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+    color: rgba(255, 255, 255, 0.55) !important;
+    scroll-snap-align: start;
+    transition:
+      background-color 0.22s ease,
+      border-color 0.22s ease,
+      color 0.22s ease,
+      box-shadow 0.22s ease,
+      transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    letter-spacing: 0.01em;
+    display: flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  .category-filter-item.active {
-    background-color: rgba(249, 115, 22, 0.1) !important;
-    border-color: var(--accent) !important;
-    color: var(--accent) !important;
+  .category-filter-item:active {
+    transform: scale(0.93) !important;
   }
-  
+
+  /* ── CHIP ICON EMOJI SPAN ────────────────────────────────────── */
+  .category-chip-icon {
+    font-size: 1rem;
+    line-height: 1;
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    flex-shrink: 0;
+  }
+
+  /* ── ACTIVE CHIP ─────────────────────────────────────────────── */
+  .category-filter-item.active {
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.18) 0%, rgba(234, 88, 12, 0.12) 100%) !important;
+    border-color: rgba(249, 115, 22, 0.7) !important;
+    color: #fff !important;
+    box-shadow:
+      0 0 0 2px rgba(249, 115, 22, 0.15),
+      0 4px 16px rgba(249, 115, 22, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .category-filter-item.active .category-chip-icon {
+    transform: scale(1.2) rotate(-6deg);
+  }
+
+  .category-filter-item.active .category-chip-label {
+    color: #fff !important;
+    font-weight: 800 !important;
+  }
+
+  /* ── CHIP COUNT BADGE ────────────────────────────────────────── */
+  .category-item-count {
+    font-size: 0.62rem !important;
+    font-weight: 800 !important;
+    margin-left: 2px !important;
+    background-color: rgba(0, 0, 0, 0.28) !important;
+    padding: 1px 6px !important;
+    border-radius: 99px !important;
+    flex-shrink: 0;
+    letter-spacing: 0;
+    opacity: 0.75;
+  }
+
+  .category-filter-item.active .category-item-count {
+    background-color: rgba(249, 115, 22, 0.25) !important;
+    color: #f97316 !important;
+    opacity: 1;
+  }
+
+  /* ── NAME SPAN ───────────────────────────────────────────────── */
   .category-filter-item-name {
     max-width: none !important;
     overflow: visible !important;
     text-overflow: clip !important;
     white-space: nowrap !important;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    display: contents !important; /* Let the chip's flex layout control */
   }
 
-  .category-item-count {
-    font-size: 0.65rem !important;
-    margin-left: 4px !important;
+  .category-chip-label {
+    white-space: nowrap;
+    font-weight: 700;
+    color: inherit;
+  }
+
+  /* ── ACTIVE FILTER BREADCRUMB ────────────────────────────────── */
+  .mobile-active-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0 2px 0;
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    animation: fadeInDown 0.25s ease;
+  }
+
+  .mobile-active-filter-bar .filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(249, 115, 22, 0.1);
+    border: 1px solid rgba(249, 115, 22, 0.3);
+    color: #f97316;
+    padding: 3px 10px 3px 8px;
+    border-radius: 99px;
+    font-size: 0.74rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .mobile-active-filter-bar .filter-tag:active {
+    background: rgba(249, 115, 22, 0.2);
+    transform: scale(0.95);
+  }
+
+  .mobile-active-filter-bar .filter-tag-icon {
+    font-size: 0.85rem;
+  }
+
+  .mobile-active-filter-bar .filter-clear-x {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    background: rgba(249, 115, 22, 0.2);
+    border-radius: 50%;
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: #f97316;
+    line-height: 1;
+    margin-left: 2px;
+    flex-shrink: 0;
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
   /* Custom Glowing Mobile Tasa BCV Pill styling */
@@ -1085,6 +1258,94 @@
   .mobile-tasa-badge strong {
     color: white !important;
     margin-left: 3px;
+  }
+
+  /* ── MOBILE CATEGORY OUTER CONTAINER ────────────────────────── */
+  .mobile-category-outer {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 4px;
+  }
+
+  /* ── MOBILE CATEGORY SEARCH BAR ─────────────────────────────── */
+  .mobile-cat-search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .mobile-cat-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    fill: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+    flex-shrink: 0;
+  }
+
+  .mobile-cat-search-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.09);
+    border-radius: 9999px;
+    padding: 9px 36px 9px 36px;
+    color: white;
+    font-size: 0.8rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none;
+  }
+
+  .mobile-cat-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.28);
+    font-weight: 400;
+  }
+
+  .mobile-cat-search-input:focus {
+    border-color: rgba(249, 115, 22, 0.5);
+    background: rgba(249, 115, 22, 0.04);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.08);
+  }
+
+  .mobile-cat-search-clear {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-cat-search-clear svg {
+    width: 11px;
+    height: 11px;
+    fill: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+  }
+
+  .mobile-cat-search-clear:active {
+    background: rgba(249, 115, 22, 0.2);
+  }
+
+  .mobile-cat-search-clear:active svg {
+    fill: #f97316;
   }
 }
 
@@ -1273,8 +1534,15 @@
   }
   
   .catalog-stats-badge {
-    text-align: center;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    gap: 8px 16px !important;
+    white-space: normal !important;
     font-size: 0.72rem !important;
+    text-align: left !important;
   }
   
   .autocotizador-title-block h2 {
